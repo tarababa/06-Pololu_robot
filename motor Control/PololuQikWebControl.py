@@ -1,3 +1,5 @@
+#I should add some comments to the functions in this file
+
 from wsgiref.simple_server import make_server
 from  urllib.parse import parse_qs
 import logging
