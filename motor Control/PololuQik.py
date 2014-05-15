@@ -12,9 +12,6 @@
 #               qik dual serial motor controllers see alsoe 
 #               https://github.com/pololu/qik-arduino/tree/master/PololuQik
 #              
-#              
-#
-#
 ################################################################################
 
 import logging,traceback
@@ -54,7 +51,6 @@ LOGGER = 'PololuQik'
 
 class PololuQik():
  
-      
   def __init__(self):
     #load general configuration
     PololuQikConfig.general_configuration();
