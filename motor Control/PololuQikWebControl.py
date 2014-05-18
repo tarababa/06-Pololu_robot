@@ -17,7 +17,6 @@
 from wsgiref.simple_server import make_server
 from  urllib.parse import parse_qs
 import logging
-import ipaddress
 import PololuQikConfig
 
 ########################
@@ -211,5 +210,5 @@ def application(environ, start_response):
 #intialize color of text on buttons to black
 backwardButtonColor,forwardButtonColor,leftButtonColor,rightButtonColor,stopButtonColor=setButtonColors(False,False,False,False,False)
 #start application server
-server = make_server(str(ipaddress.ip_address(webServerIp)), int(webServerPort), application)
+server = make_server(str(webServerIp), int(webServerPort), application)
 server.serve_forever()
