@@ -213,3 +213,29 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+#other stuff to ignore
+
+SerialMotorController_qik_2s9v1.pdf
+adafruits-raspberry-pi-lesson-5-using-a-console-cable.pdf
+motor Control/PololuQik.cpp
+motor Control/PololuQik.h
+motor Control/test.html
+motor Control/form.py
+motor Control/serialTest.py
+motor Control/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/Pololu Serial Transmitter.exe.manifest
+motor Control/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/Pololu Serial Transmitter.exe.deploy
+motor Control/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/Pololu Serial Transmitter.application
+motor Control/PololuSerialTransmitterV1.3.zip
+motor Control/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/pololu.ico.deploy
+motor Control/etc/log.ini
+motor Control/etc/log.ini
+motor Control/etc/log.ini
+motor Control/etc/log.ini
+motor Control/etc/log.ini
+motor Control/etc/log.ini
+motor Control/etc/log.ini
+motor Control/PololuSerialTransmitterV1.3/Pololu Serial Transmitter.application
+motor Control/PololuSerialTransmitterV1.3/setup.exe
+motor Control/application.py
+motor Control/PololuRobotWebControl.py
