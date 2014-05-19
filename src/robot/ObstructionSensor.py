@@ -21,22 +21,27 @@ class ObstructionSensor():
   def __init__(self,**kwargs):
     #set our logger
     self.logger = kwargs.get('logger',)
+    #which channel is the sensor attached to
+    self.channel = kwargs.get('obstructionSensorFront',)
     #define obstructed flag    
     self.obstructed = None
     #use Broadcom Pin numbers
     GPIO.setmode(GPIO.BCM)
     #as long as output is high, no obstruction detected
-    GPIO.setup(4, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+    GPIO.setup(self.channel, GPIO.IN, pull_up_down = GPIO.PUD_UP)
     #initialize state of sensor
-    if GPIO.input(4) == GPIO.LOW:
+    if GPIO.input(self.channel) == GPIO.LOW:
       self.set_obstructed()
     else: # not not obstructed
       self.reset_obstructed()
     #add event to detect falling edge i.e. obstruction detected
-    #and to also detect falling edge i.e. obstruction detected
-    GPIO.add_event_detect(4, GPIO.BOTH, callback=set_obstructed)
-    #add event to detect rising edge i.e. obstruction removed
-    GPIO.add_event_detect(4, GPIO.RISING, callback=reset_obstructed)
+    #and to also detect rising edge i.e. no obstruction detected
+    GPIO.add_event_detect(self.channel, GPIO.BOTH, callback=self.do_edge)
+  def do_edge(self,channel):
+    if GPIO.input(self.channel) == GPIO.LOW:
+      self.set_obstructed()
+    else:
+      self.reset_obstructed()
   def set_obstructed(self):
     self.logger.debug('setting obstructed to True')
     self.obstructed=True
@@ -44,8 +49,8 @@ class ObstructionSensor():
     self.logger.debug('setting obstructed to False')
     self.obstructed=False
     def cleanUp(self):  
-    GPIO.remove_event_detect(4)
-    GPIO.cleanup()
+      GPIO.remove_event_detect(self.channel)
+      GPIO.cleanup()
     
 def main():
   ########################
@@ -71,7 +76,7 @@ def main():
   mySensor = ObstructionSensor(logger=logger, obstructionSensorFront=int(obstructionSensorFront))
   
   while True:
-    logger.debug('mySensor.obstructed['+mySensor.obstructed+']')
+    logger.debug('mySensor.obstructed['+str(mySensor.obstructed)+']')
     time.sleep(.5)
   return 0
 
