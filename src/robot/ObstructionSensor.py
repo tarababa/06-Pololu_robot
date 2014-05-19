@@ -6,7 +6,8 @@
 # File changed        : $Date: 2013-08-21 15:19:43 +0200 (Mi, 21 Aug 2013) $
 # Environment         : Python 3.3.4
 # ##############################################################################
-# Description : A simple class representing a pololu robot   
+# Description : A simple class representing a sensor used to detected
+#               obstructions
 #              
 ################################################################################
 
