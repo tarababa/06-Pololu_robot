@@ -11,7 +11,13 @@
 #               This class is based on Pololu's Arduino library for the Pololu 
 #               qik dual serial motor controllers see alsoe 
 #               https://github.com/pololu/qik-arduino/tree/master/PololuQik
-#              
+#
+#------------------------------------------------------------------------------#
+# version who when       description                                           #
+# 1.10    hta 20.05.2014 Python 3.2.3 bytearray has not attribute clear using  #
+#                        del s[:] instead to ensure bytearray is empty         #
+#                                                                              # 
+#                                                                              # 
 ################################################################################
 import sys,os
 import logging,traceback
@@ -87,7 +93,7 @@ class PololuQik():
   #------------------------------------------------------------------------------#  
   def autoDetectBaudRate(self):
     #clear byte array
-    self.write_bytes.clear()
+    del self.write_bytes[:]
     #set command byte
     self.write_bytes.append(QIK_AUTODETECT_BAUD_RATE)
     # Write the byte to the serial port
@@ -106,7 +112,7 @@ class PololuQik():
   #------------------------------------------------------------------------------#      
   def getFirmwareVersion(self):
     #clear byte array
-    self.write_bytes.clear()
+    del self.write_bytes[:]
     #set command byte
     self.write_bytes.append(QIK_GET_FIRMWARE_VERSION)
     # Write the byte to the serial port
@@ -141,7 +147,7 @@ class PololuQik():
   #------------------------------------------------------------------------------#        
   def getErrorByte(self):
     #clear byte array
-    self.write_bytes.clear()
+    del self.write_bytes[:]
     #set command byte
     self.write_bytes.append(QIK_GET_ERROR_BYTE)
     # Write the byte to the serial port
@@ -171,7 +177,7 @@ class PololuQik():
   #------------------------------------------------------------------------------#  
   def getConfigurationParameter(self, param):
     #clear byte array
-    self.write_bytes.clear()
+    del self.write_bytes[:]
     #set command byte
     self.write_bytes.append(QIK_GET_CONFIGURATION_PARAMETER)
     #select parameter value to retrieve
@@ -207,7 +213,7 @@ class PololuQik():
   #------------------------------------------------------------------------------#      
   def setConfigurationParameter(self, param, value):
     #clear byte array
-    self.write_bytes.clear()
+    del self.write_bytes[:]
     #set command byte
     self.write_bytes.append(QIK_SET_CONFIGURATION_PARAMETER)
     #select parameter to set
@@ -241,7 +247,7 @@ class PololuQik():
   #------------------------------------------------------------------------------#
   def setM0Coast(self):
     #clear byte array
-    self.write_bytes.clear()
+    del self.write_bytes[:]
     #set command byte
     self.write_bytes.append(QIK_2S9V1_MOTOR_M0_COAST)
     # Write the byte to the serial port
@@ -259,7 +265,7 @@ class PololuQik():
   #------------------------------------------------------------------------------#
   def setM1Coast(self):
     #clear byte array
-    self.write_bytes.clear()
+    del self.write_bytes[:]
     #set command byte
     self.write_bytes.append(QIK_2S9V1_MOTOR_M1_COAST)
     # Write the byte to the serial port
@@ -276,7 +282,6 @@ class PololuQik():
   # 1.00    hta 12.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------#
   def setCoast(self):
-    #clear byte array
     self.setM0Coast()
     self.setM1Coast()
 
@@ -292,7 +297,7 @@ class PololuQik():
   #------------------------------------------------------------------------------#
   def setM0Speed(self, speed):
     #clear byte array
-    self.write_bytes.clear()
+    del self.write_bytes[:]
     #initialize reverse 
     reverse = False
     if speed < 0 :
@@ -331,7 +336,7 @@ class PololuQik():
   #------------------------------------------------------------------------------#
   def setM1Speed(self, speed):
     #clear byte array
-    self.write_bytes.clear()
+    del self.write_bytes[:]
     #initialize reverse 
     reverse = False
     if speed < 0 :
