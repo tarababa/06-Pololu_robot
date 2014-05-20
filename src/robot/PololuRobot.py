@@ -13,6 +13,7 @@
 import sys,os
 import time
 import logging, traceback
+import random
 from threading import Timer
 sys.path.append(os.path.join('..','motor control'))
 sys.path.append(os.path.join('..','configuration'))
@@ -24,15 +25,18 @@ class PololuRobot():
     #get logger object which is passed
     #as a parameter
     self.logger=kwargs.get('logger',)
+    self.obstructionSensorFront=kwargs.get('obstructionSensorFront')
     #there is one obstruction sensor a
     #at the front of the robot
-    #self.sensorFront=ObstructionSensor(**kwargs)
+    self.sensorFront=ObstructionSensor.ObstructionSensor(**kwargs)
     #we have one motor controller for
     #both motors
     self.motorControl=PololuQik.PololuQik()
     self.setDriveSpeed=30
     #initially the robot is stopped
     self.stopped=True
+    #evading action
+    self.evading=False
   #------------------------------------------------------------------------------#
   # driveBackwards: Make robot drive backwards                                   #
   #                                                                              #
@@ -47,7 +51,7 @@ class PololuRobot():
     self.cancelCallback()      
     self.motorControl.setSpeed(-1*self.setDriveSpeed)
     #robot is not stopped
-    self.stoppped=False
+    self.stopped=False
     
   #------------------------------------------------------------------------------#
   # driveForwards: Make robot drive forwards                                     #
@@ -63,7 +67,7 @@ class PololuRobot():
     self.cancelCallback()      
     self.motorControl.setSpeed(self.setDriveSpeed)
     #robot is not stopped
-    self.stoppped=False
+    self.stopped=False
     
   #------------------------------------------------------------------------------#
   # stop: stop the robot                                                         #
@@ -81,7 +85,7 @@ class PololuRobot():
     self.motorControl.setSpeed(0)      
     self.motorControl.setCoast()
     #robot is stoped
-    self.stoppped=True
+    self.stopped=True
     
   #------------------------------------------------------------------------------#
   # turnRight: turn right. If a value for time is passed the right turn will be  #
@@ -114,7 +118,7 @@ class PololuRobot():
     M1Speed= int((M0Speed / inner_rate) * outer_rate)
     self.motorControl.setM0Speed(M0Speed)          
     self.motorControl.setM1Speed(M1Speed)
-    self.stoppped=False
+    self.stopped=False
     #if time has been set > 0 than the right turn 
     #is stopped after that amount of time
     self.callback(function=self.callbackStop, time=time)
@@ -149,7 +153,7 @@ class PololuRobot():
     M0Speed= int((M1Speed / inner_rate) * outer_rate)
     self.motorControl.setM0Speed(M0Speed)          
     self.motorControl.setM1Speed(M1Speed)
-    self.stoppped=False
+    self.stopped=False
     #if time has been set > 0 than the left turn 
     #is stopped after that amount of time
     self.callback(function=self.callbackStop, time=time)
@@ -204,14 +208,83 @@ class PololuRobot():
       None
     except:
       self.logger.warning('failed to cancel timer['+  str(traceback.format_exc()) +']')   
+  #------------------------------------------------------------------------------#
+  # evade: Evade an obstacle by reversing a bit then turning left or right       #
+  #                                                                              #
+  #                                                                              #
+  # paramteres:                                                                  #
+  #                                                                              #
+  # returnvalues: None                                                           #
+  #------------------------------------------------------------------------------#
+  # version who when       description                                           #
+  # 1.00    hta 20.05.2014 Initial version                                       #
+  #------------------------------------------------------------------------------#           
+  def evade(self):
+    self.evading=True
+    action='reverse'
+    while self.evading:
+      if action=='reverse':
+        self.logger.debug('action['+action+']')
+        #evasive action starts with reversing
+        #until the front sensor no longer sees
+        #the obstacle
+        self.driveBackwards()
+        action='clearObstacle'
+      elif action=='clearObstacle':
+        self.logger.debug('action['+action+']')
+        #we are driving backwards until
+        #the sensor no longer detects the
+        #obstruction, then we can turn
+        if not self.sensorFront.obstructed:
+          action='turn'
+      elif action=='turn':
+        self.logger.debug('action['+action+']')
+        #lets make this exciting and decide
+        #randomly whether to turn left or right
+        direction=['left','right']
+        if random.choice(direction)=='left':
+          self.turnLeft(3)
+        else:
+          self.turnRight(3)
+        action='turning'
+      elif action == 'turning':
+        if self.stopped:
+          #turn has been executed, evasive
+          #action is complete we can go
+          #back to driving around at will
+          self.evading=False
+      
 
-
+  #------------------------------------------------------------------------------#
+  # driveAvoidCollision: Drive around and avoid collisions                       #
+  #                                                                              #
+  # paramteres:                                                                  #
+  #                                                                              #
+  # returnvalues: None                                                           #
+  #------------------------------------------------------------------------------#
+  # version who when       description                                           #
+  # 1.00    hta 20.05.2014 Initial version                                       #
+  #------------------------------------------------------------------------------#           
+  def driveAvoidCollision(self):
+    while True:
+      # if we are not stopped, the front sensor is not detecting an
+      # obstruction and we are not in the processes of taking evasive
+      # action then we can start driving forwards
+      if self.stopped and not self.sensorFront.obstructed and not self.evading:
+        self.driveForwards()
+        self.logger.debug('stopped['+str(self.stopped)+']')
+      # we detected an obstacle, and we are not allready taking
+      # evasive action than we should go and try to evade the
+      # obstacle
+      if self.sensorFront.obstructed and not self.evading:
+        self.evade() # avoid collision
 def main():
   ########################
   #GENERAL CONFIGURATION #
   ########################
   #load config
   config=Configuration.general_configuration();
+  obstructionSensorFront = Configuration.CONFIG['ObstructionSensors']['FRONT']
 
   ###############
   #SETUP LOGGING#
@@ -224,18 +297,18 @@ def main():
   #create logger
   logger =  logging.getLogger(LOGGER) 
 
-  robot = PololuRobot(logger=logger)
-  
+  robot = PololuRobot(logger=logger,obstructionSensorFront=int(obstructionSensorFront))
+  robot.driveAvoidCollision()
   #robot.driveBackwards()
   #time.sleep(5)
-  robot.turnRight(4)
-  while not robot.stopped:
-    time.sleep(0.3)
-  time.sleep(3)
+  #robot.turnRight(4)
+  #while not robot.stopped:
+  #  time.sleep(0.3)
+  #time.sleep(3)
   
-  robot.turnLeft(4)
-  while not robot.stopped:
-    time.sleep(0.3)
+  #robot.turnLeft(4)
+  #while not robot.stopped:
+  #  time.sleep(0.3)
   
   #robot.driveForwards()
   #time.sleep(5)
