@@ -31,27 +31,43 @@ class ObstructionSensor():
     #as long as output is high, no obstruction detected
     GPIO.setup(self.channel, GPIO.IN, pull_up_down = GPIO.PUD_UP)
     #initialize state of sensor
-    if GPIO.input(self.channel) == GPIO.LOW:
-      self.set_obstructed()
-    else: # not not obstructed
-      self.reset_obstructed()
+    self.do_edge(self.channel)
     #add event to detect falling edge i.e. obstruction detected
     #and to also detect rising edge i.e. no obstruction detected
     GPIO.add_event_detect(self.channel, GPIO.BOTH, callback=self.do_edge)
+  #------------------------------------------------------------------------------#
+  # do_edge: This function called when either a rising or a falling edge is      #
+  #          is detected on our sensor channel                                   #
+  #                                                                              #
+  # paramteres:  channel: the GPIO channel on wich the edge was detected         #
+  #                                                                              #
+  # returnvalues: None                                                           #
+  #------------------------------------------------------------------------------#
+  # version who when       description                                           #
+  # 1.00    hta 20.05.2014 Initial version                                       #
+  #------------------------------------------------------------------------------#     
   def do_edge(self,channel):
     if GPIO.input(self.channel) == GPIO.LOW:
-      self.set_obstructed()
+      self.logger.debug('setting obstructed to True')
+      self.obstructed=True
     else:
-      self.reset_obstructed()
-  def set_obstructed(self):
-    self.logger.debug('setting obstructed to True')
-    self.obstructed=True
-  def reset_obstructed(self):
-    self.logger.debug('setting obstructed to False')
-    self.obstructed=False
-    def cleanUp(self):  
-      GPIO.remove_event_detect(self.channel)
-      GPIO.cleanup()
+      self.logger.debug('setting obstructed to False')
+      self.obstructed=False
+      
+  #------------------------------------------------------------------------------#
+  # cleanUp: Houskeeping, release the resources we used                          #
+  #                                                                              #
+  #                                                                              #
+  # paramteres:                                                                  #
+  #                                                                              #
+  # returnvalues: None                                                           #
+  #------------------------------------------------------------------------------#
+  # version who when       description                                           #
+  # 1.00    hta 20.05.2014 Initial version                                       #
+  #------------------------------------------------------------------------------#        
+  def cleanUp(self):  
+    GPIO.remove_event_detect(self.channel)
+    GPIO.cleanup()
     
 def main():
   ########################
