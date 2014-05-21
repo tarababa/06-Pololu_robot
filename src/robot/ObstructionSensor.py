@@ -1,15 +1,28 @@
-# ##############################################################################
-# Application         : Pololu Robot 
-# Created by          : hta
-# Created             : hta
-# Changed by          : $Author: b7tarah $
-# File changed        : $Date: 2013-08-21 15:19:43 +0200 (Mi, 21 Aug 2013) $
-# Environment         : Python 3.3.4
-# ##############################################################################
-# Description : A simple class representing a sensor used to detected
-#               obstructions
-#              
-################################################################################
+#    Copyright 2014 Helios Taraba 
+#
+#    This file is part of PololuRobot.
+#
+#    PololuRobot is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    PololuRobot is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with PololuRobot.  If not, see <http://www.gnu.org/licenses/>.
+
+
+"""
+This module implements the ObstructionSensor class. The obstruction sensor is 
+attached to the front of the robot and interfaces as an input on channel 4 of 
+the GPIO with the raspberry PI, using the RPi.GPIO module.
+
+..http://sourceforge.net/p/raspberry-gpio-python/wiki/Home/
+"""
 
 import sys,os,time
 import logging
@@ -98,5 +111,4 @@ def main():
   return 0
 
 
-if __name__ == '__main__':
-    sys.exit(main())    
+

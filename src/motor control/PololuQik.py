@@ -1,24 +1,33 @@
-# ##############################################################################
-# Application         : Pololu QIK 2S9V1 Dual serial motor controller
-# Created by          : hta
-# Created             : hta
-# Changed by          : $Author: b7tarah $
-# File changed        : $Date: 2013-08-21 15:19:43 +0200 (Mi, 21 Aug 2013) $
-# Environment         : Python 3.3.4
-# ##############################################################################
-# Description : A simple class which lets you configure and control the  
-#               pololu QIK 2S9V1 Dual serial motor controller.
-#               This class is based on Pololu's Arduino library for the Pololu 
-#               qik dual serial motor controllers see alsoe 
-#               https://github.com/pololu/qik-arduino/tree/master/PololuQik
+#    Copyright 2014 Helios Taraba 
 #
-#------------------------------------------------------------------------------#
-# version who when       description                                           #
-# 1.10    hta 20.05.2014 Python 3.2.3 bytearray has not attribute clear using  #
-#                        del s[:] instead to ensure bytearray is empty         #
-#                                                                              # 
-#                                                                              # 
-################################################################################
+#    This file is part of PololuRobot.
+#
+#    PololuRobot is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    PololuRobot is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with PololuRobot.  If not, see <http://www.gnu.org/licenses/>.
+
+
+"""
+This module implements the PololuQik class. This class was specifically 
+developed to control the Pololu QIK 2S9V1 Dual serial motor controller.
+It is based on Pololu's Arduino library for the Pololu qik dual serial
+motor controllers.
+
+..https://github.com/pololu/qik-arduino/tree/master/PololuQik
+..http://pyserial.sourceforge.net/#
+"""
+
+
+
 import sys,os
 import logging,traceback
 import serial
@@ -372,15 +381,5 @@ class PololuQik():
     self.setM0Speed(speed)
     self.setM1Speed(speed)
       
-def main():
-  qik=PololuQik()
-  version=qik.getFirmwareVersion()
-  errorByte=qik.getErrorByte()
-  parameterValue=qik.getConfigurationParameter(0x03)
-  #returnValue=qik.setConfigurationParameter(0x03,0x00)
-  qik.setSpeed(-127)
-  time.sleep(3)
-  qik.setCoast()
-if __name__ == '__main__':
-  main()      
+
   

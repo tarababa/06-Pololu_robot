@@ -216,29 +216,32 @@ pip-log.txt
 
 #other stuff to ignore
 
-SerialMotorController_qik_2s9v1.pdf
-adafruits-raspberry-pi-lesson-5-using-a-console-cable.pdf
-motor Control/PololuQik.cpp
-motor Control/PololuQik.h
-motor Control/test.html
-motor Control/form.py
-motor Control/serialTest.py
-motor Control/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/Pololu Serial Transmitter.exe.manifest
-motor Control/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/Pololu Serial Transmitter.exe.deploy
-motor Control/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/Pololu Serial Transmitter.application
-motor Control/PololuSerialTransmitterV1.3.zip
-motor Control/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/pololu.ico.deploy
-motor Control/etc/log.ini
-motor Control/etc/log.ini
-motor Control/etc/log.ini
-motor Control/etc/log.ini
-motor Control/etc/log.ini
-motor Control/etc/log.ini
-motor Control/etc/log.ini
-motor Control/PololuSerialTransmitterV1.3/Pololu Serial Transmitter.application
-motor Control/PololuSerialTransmitterV1.3/setup.exe
-motor Control/application.py
-motor Control/PololuRobotWebControl.py
+docs_and_utils/SerialMotorController_qik_2s9v1.pdf
+docs_and_utils/adafruits-raspberry-pi-lesson-5-using-a-console-cable.pdf
+docs_and_utils/PololuQik.cpp
+docs_and_utils/PololuQik.h
+docs_and_utils/test.html
+docs_and_utils/form.py
+docs_and_utils/serialTest.py
+docs_and_utils/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/Pololu Serial Transmitter.exe.manifest
+docs_and_utils/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/Pololu Serial Transmitter.exe.deploy
+docs_and_utils/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/Pololu Serial Transmitter.application
+docs_and_utils/PololuSerialTransmitterV1.3.zip
+docs_and_utils/PololuSerialTransmitterV1.3/Application Files/Pololu Serial Transmitter_1_0_0_8/pololu.ico.deploy
+docs_and_utils/etc/log.ini
+docs_and_utils/etc/log.ini
+docs_and_utils/etc/log.ini
+docs_and_utils/etc/log.ini
+docs_and_utils/etc/log.ini
+docs_and_utils/etc/log.ini
+docs_and_utils/etc/log.ini
+docs_and_utils/PololuSerialTransmitterV1.3/Pololu Serial Transmitter.application
+docs_and_utils/PololuSerialTransmitterV1.3/setup.exe
+docs_and_utils/application.py
+docs_and_utils/PololuRobotWebControl.py
 src/motor control/test.py
 src/web control/test.py
 src/web control/test2.py
+docs_and_utils/serialTest2.py
+src/web control/#test.py#
+src/web control/#test2.py#

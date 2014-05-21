@@ -1,22 +1,34 @@
-# ##############################################################################
-# Application         : Pololu Robot Webcontrol
-# Created by          : hta
-# Created             : hta
-# Changed by          : $Author: b7tarah $
-# File changed        : $Date: 2013-08-21 15:19:43 +0200 (Mi, 21 Aug 2013) $
-# Environment         : Python 3.3.4
-# ##############################################################################
-# Description : A simple application server that presents a website showing
-#               a raspicam video stream (assumes mjpg_streamer is setup and
-#               running at resultion of 400x300).
-#               Furtermore it shows the controls allowing to change direction
-#               and speed of the robot
-#              
-#               Note that this appication requires following third party python
-#               modules:
-#                 wheezy.routing   (installation: easy_install wheezy.routing)
-#                 webob            (installation: easy_install webob)
-################################################################################
+#    Copyright 2014 Helios Taraba 
+#
+#    This file is part of PololuRobot.
+#
+#    PololuRobot is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    PololuRobot is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with PololuRobot.  If not, see <http://www.gnu.org/licenses/>.
+
+
+"""
+This module implements the PololuRobotWebControlApp class. This module serves up
+the web page which can be used to control the PololuRobot and shows video stream
+from the camera attached to the raspberry pi.
+
+The web application is assumed to be single user and uses 'wheezy.routing' to 
+handle URL processing, and 'WebOb''s Request and Response classes
+to ease construction of the responses. The pages themselves are stored as HTML
+with placeholders which are replaced as required
+
+.. wheezy.routing: http://pythonhosted.org/wheezy.routing/
+.. WebOb: http://webob.org/
+"""
 
 import sys,os
 from wsgiref.simple_server import make_server

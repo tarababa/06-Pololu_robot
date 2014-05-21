@@ -1,14 +1,31 @@
-# ##############################################################################
-# Application         : Pololu Robot 
-# Created by          : hta
-# Created             : hta
-# Changed by          : $Author: b7tarah $
-# File changed        : $Date: 2013-08-21 15:19:43 +0200 (Mi, 21 Aug 2013) $
-# Environment         : Python 3.3.4
-# ##############################################################################
-# Description : A simple class representing a pololu robot   
-#              
-################################################################################
+#    Copyright 2014 Helios Taraba 
+#
+#    This file is part of PololuRobot.
+#
+#    PololuRobot is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    PololuRobot is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with PololuRobot.  If not, see <http://www.gnu.org/licenses/>.
+
+
+"""
+This module defines the PololuRobot application. The main class in the module is
+PololuRobot. It is responsible for insanciating objects of the PololuQik motor 
+controller class and the ObstructionSensor class. 
+It also is responsible for starting the PololuRobotWebControlApp using the 
+WSGI reference implation included in Python.
+
+This is typically launched by PicroscopyConsoleApp using
+the WSGI reference implementation included in Python.
+"""
 
 import sys,os
 import time
