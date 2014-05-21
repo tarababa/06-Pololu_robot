@@ -23,7 +23,7 @@ class ObstructionSensor():
     #set our logger
     self.logger = kwargs.get('logger',)
     #which channel is the sensor attached to
-    self.channel = kwargs.get('obstructionSensorFront',)
+    self.channel = int(kwargs.get('obstructionSensorFront'))
     #define obstructed flag    
     self.obstructed = None
     #use Broadcom Pin numbers

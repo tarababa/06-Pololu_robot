@@ -190,40 +190,26 @@ class PololuRobotWebControlApp(object):
     if action == 'forward':
       self.form.message='Going '+action
       self.form.setButtonColors(backward=False, forward=True, left=False, right=False, stop=False)
-      #############################################
-      # TODO put code here to drive robot forwards#
-      #############################################    
       self.robot.driveForwards()
     elif action == 'backward':
       self.form.message='Going '+action
       self.form.setButtonColors(backward=True, forward=False, left=False, right=False, stop=False)
-      ##############################################
-      # TODO put code here to drive robot backwards#
-      ##############################################    
+      self.robot.driveBackwards()
     elif action == 'left':
       self.form.message='Turning '+action    
       self.form.setButtonColors(backward=False, forward=False, left=True, right=False, stop=False)
-      ########################################
-      # TODO put code here to turn robot left#
-      ########################################     
+      self.robot.turnLeft()
     elif action == 'right':
       self.form.message='Turning '+action   
       self.form.setButtonColors(backward=False, forward=False, left=False, right=True, stop=False)
-      #########################################
-      # TODO put code here to turn robot right#
-      #########################################     
+      self.robot.turnRight()
     elif action == 'setSpeed':
       self.form.message='Setting speed to '+speedSliderValue
       self.form.speed = int(speedSliderValue)
-      ######################################
-      # TODO put code to set robot velocity#
-      ######################################     
     elif action == 'stop':
       self.form.message='Stopping'  
       self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=True)
-      ##############################
-      # TODO put code to stop robot#
-      ##############################     
+      self.robot.stop()
     
     #return updated control form to web client  
     return self.do_display_form (req)

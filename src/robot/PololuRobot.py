@@ -15,20 +15,22 @@ import time
 import logging, traceback
 import random
 from threading import Timer
+from wsgiref.simple_server import make_server
 sys.path.append(os.path.join('..','motor control'))
+sys.path.append(os.path.join('..','web control'))
 sys.path.append(os.path.join('..','configuration'))
-import PololuQik, Configuration, ObstructionSensor    
+import PololuQik, Configuration, ObstructionSensor, PololuRobotWebControl    
     
 class PololuRobot():
   def __init__(self):
     self.timer=None
     #load configuration
-    self.kwargs=loadConfig()
-    self.logger=setupLogging()
+    self.kwargs=self.loadConfig()
+    self.logger=self.setupLogging()
     #there is one obstruction sensor at the front of the robot
-    self.sensorFront=ObstructionSensor.ObstructionSensor(**kwargs)
+    self.sensorFront=ObstructionSensor.ObstructionSensor(**self.kwargs)
     #we have one motor controller for both motors
-    self.motorControl=PololuQik.PololuQik(**kwargs)
+    self.motorControl=PololuQik.PololuQik(**self.kwargs)
     #initialize initial speed
     self.setDriveSpeed=30
     #initially the robot is stopped
@@ -354,49 +356,22 @@ class PololuRobot():
       app = PololuRobotWebControl.PololuRobotWebControlApp(**kwargs)
       #start
       httpd = make_server(str(self.kwargs.get('webServerIp')),int(self.kwargs.get('webServerPort')), app)
-      self.logger.debug('webServerIp['+str(self.kwargs.get(webServerIp))+'] webServerPort['+ str(self.kwargs.get(webServerPort)) +']')
+      self.logger.debug('webServerIp['+str(self.kwargs.get('webServerIp'))+'] webServerPort['+ str(self.kwargs.get('webServerPort')) +']')
       httpd.serve_forever()
-    finally:
+    except (KeyboardInterrupt):
       None
+    finally:
+      try:
+        self.stop()
+      except Exception as e:
+        logging.error(str(traceback.format_exc()))
+      try:
+        self.sensorFront.cleanUp()
+      except Exception as e:
+        logging.error(str(traceback.format_exc()))
     return 0     
-        
-#def main():
-# ########################
-# #GENERAL CONFIGURATION #
-# ########################
-# #load config
-# config=Configuration.general_configuration();
-# obstructionSensorFront = Configuration.CONFIG['ObstructionSensors']['FRONT']
-#
-# ###############
-# #SETUP LOGGING#
-# ###############
-# LOGGER = 'PololuRobot'
-# #load logging configuration
-# Configuration.logging_configuration();
-# #configure logger as per configuration
-# Configuration.init_log(LOGGER);
-# #create logger
-# logger =  logging.getLogger(LOGGER) 
-#
-# robot = PololuRobot(logger=logger,obstructionSensorFront=int(obstructionSensorFront))
-# robot.driveAvoidCollision()
-# #robot.driveBackwards()
-# #time.sleep(5)
-# #robot.turnRight(4)
-# #while not robot.stopped:
-# #  time.sleep(0.3)
-# #time.sleep(3)
-# 
-# #robot.turnLeft(4)
-# #while not robot.stopped:
-# #  time.sleep(0.3)
-# 
-# #robot.driveForwards()
-# #time.sleep(5)
-# #robot.stop()
-# return 0
 
 main=PololuRobot() 
+
 if __name__ == '__main__':
     sys.exit(main())

@@ -64,7 +64,7 @@ class PololuQik():
     self.logger=kwargs.get('logger',)
     #assigne serialport  
     serialPort=kwargs.get('serialPort')
-    baudRate  =int(kwargs.get(baudRate,38400))
+    baudRate  =int(kwargs.get('baudRate', 38400))
     self.logger.debug('using serial port['+serialPort+'] baudRate['+str(baudRate)+']')    
     self.ser = serial.Serial(serialPort, baudRate)
     # wait for connection to intialize
