@@ -31,7 +31,7 @@ import sys,os
 import time
 import logging, traceback
 import random
-from threading import Timer
+import threading
 from wsgiref.simple_server import make_server
 sys.path.append(os.path.join('..','motor control'))
 sys.path.append(os.path.join('..','web control'))
@@ -53,9 +53,9 @@ class PololuRobot():
     #initially the robot is stopped
     self.stopped=True
     #roving mode can be chosen from web application
-    self.roving=False
+    self.isRoving=False
     #evading action (whilst roving)
-    self.evading=False
+    self.isEvading=False
     #not driving forwards or backwards to now
     self.drivingForwards=False
     self.drivingBackwards=False
@@ -288,7 +288,7 @@ class PololuRobot():
   #------------------------------------------------------------------------------#     
   def callback(self,function,time):
     if time > 0:
-      self.timer = Timer(time,function)
+      self.timer = threading.Timer(time,function)
       self.timer.start()
       self.timer.join()
   #------------------------------------------------------------------------------#
@@ -324,9 +324,9 @@ class PololuRobot():
   # 1.00    hta 20.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------#           
   def evade(self):
-    self.evading=True
+    self.isEvading=True
     action='reverse'
-    while self.evading:
+    while self.isEvading and self.isRoving:
       if action=='reverse':
         self.logger.debug('action['+action+']')
         #evasive action starts with reversing
@@ -356,10 +356,10 @@ class PololuRobot():
           #turn has been executed, evasive
           #action is complete we can go
           #back to driving around at will
-          self.evading=False
-
+          self.isEvading=False
+    
   #------------------------------------------------------------------------------#
-  # roving: Start roving in a thread                                             #
+  # stopRoving: Terminate roving mode                                            #
   #                                                                              #
   # paramteres:                                                                  #
   #                                                                              #
@@ -368,11 +368,9 @@ class PololuRobot():
   # version who when       description                                           #
   # 1.00    hta 20.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------#           
-  def runRoving(self):
-    if not self.roving:
-      tRoving = threading.Thread(target=self.roving)
-      tRoving.start()
-      tRoving.join()
+  def stopRoving(self):
+    self.isRoving=False
+    self.stop()
     
   #------------------------------------------------------------------------------#
   # roving: Drive around and avoid collisions                                    #
@@ -385,17 +383,41 @@ class PololuRobot():
   # 1.00    hta 20.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------#           
   def roving(self):
-    while self.roving:
+    #initialize evading as it may not
+    #not have been set to false if roving
+    #was terminated whilst evading
+    self.isEvading=False
+    #if we had not previously stopped driving we do it now
+    self.stop()
+    while self.isRoving:
       # if we are not stopped, the front sensor is not detecting an
       # obstruction and we are not in the processes of taking evasive
       # action then we can start driving forwards
-      if self.stopped and not self.sensorFront.obstructed and not self.evading:
+      if self.stopped and not self.sensorFront.obstructed and not self.isEvading:
         self.driveForwards()
       # we detected an obstacle, and we are not already taking
       # evasive action than we should go and try to evade the
       # obstacle
-      if self.sensorFront.obstructed and not self.evading:
+      if self.sensorFront.obstructed and not self.isEvading:
         self.evade() # avoid collision
+    self.logger.info('leaving roving')
+
+  #------------------------------------------------------------------------------#
+  # roving: Start roving in a thread                                             #
+  #                                                                              #
+  # paramteres:                                                                  #
+  #                                                                              #
+  # returnvalues: None                                                           #
+  #------------------------------------------------------------------------------#
+  # version who when       description                                           #
+  # 1.00    hta 20.05.2014 Initial version                                       #
+  #------------------------------------------------------------------------------#           
+  def runRoving(self):
+    if not self.isRoving:
+      self.isRoving=True
+      threadRoving = threading.Thread(target=self.roving)
+      threadRoving.name='ROVING'
+      threadRoving.start()
         
         
   def __call__(self):

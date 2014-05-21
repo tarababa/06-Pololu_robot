@@ -69,6 +69,7 @@ class WebControlFormHelper():
     self.message                 = None
     self.speed                   = 0
     self.mjpgStreamServer = kwargs.get('mjpgStreamServer','http://10.0.0.101:8080/?action=stream')
+    self.setButtonColors()
   #------------------------------------------------------------------------------#
   # setButtonColors: Set the button colors according to the button pressed by    #
   #                  the user, so that the activated action (e.g. forward, left) #
@@ -217,18 +218,22 @@ class PololuRobotWebControlApp(object):
     if action == 'forward':
       self.form.message='Going '+action
       self.form.setButtonColors(backward=False, forward=True, left=False, right=False, stop=False, roving=False)
+      self.robot.stopRoving()
       self.robot.driveForwards()
     elif action == 'backward':
       self.form.message='Going '+action
       self.form.setButtonColors(backward=True, forward=False, left=False, right=False, stop=False, roving=False)
+      self.robot.stopRoving()
       self.robot.driveBackwards()
     elif action == 'left':
       self.form.message='Turning '+action    
       self.form.setButtonColors(backward=False, forward=False, left=True, right=False, stop=False, roving=False)
+      self.robot.stopRoving()
       self.robot.turnLeft()
     elif action == 'right':
       self.form.message='Turning '+action   
       self.form.setButtonColors(backward=False, forward=False, left=False, right=True, stop=False, roving=False)
+      self.robot.stopRoving()
       self.robot.turnRight()
     elif action == 'setSpeed':
       self.form.message='Setting speed to '+speedSliderValue
@@ -238,14 +243,18 @@ class PololuRobotWebControlApp(object):
       self.form.message='Stopping'  
       self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=True, roving=False)
       self.robot.stop()
+      if self.robot.isRoving:
+        self.robot.stopRoving()
     elif action == 'roving':
       #Toggle roving, of roving on then turn it of and vice versa
-      if self.form.toggleRovingButtonText = ROVING_ON:
+      if self.robot.isRoving:
         self.form.message='End roving'  
-        self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=True, roving=False)
+        self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=False, roving=False)
+        self.robot.stopRoving()
       else:
         self.form.message='Start roving'  
-        self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=True, roving=True)      
+        self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=False, roving=True)      
+        self.robot.runRoving()
     #return updated control form to web client  
     return self.do_display_form (req)
 
