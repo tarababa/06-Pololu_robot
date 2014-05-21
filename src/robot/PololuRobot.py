@@ -192,7 +192,7 @@ class PololuRobot():
     #faster then the right hand side track
     inner_rate=0.5
     outer_rate=0.7
-    min_speed = 30
+    min_speed = 15
     if int(self.setDriveSpeed * inner_rate) < min_speed:
       M0Speed=min_speed
     else:
@@ -230,7 +230,7 @@ class PololuRobot():
     #faster then the left hand side track
     inner_rate=0.5
     outer_rate=0.7
-    min_speed = 30
+    min_speed = 15
     if int(self.setDriveSpeed * inner_rate) < min_speed:
       M1Speed=min_speed
     else:
