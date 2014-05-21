@@ -209,7 +209,7 @@ class PololuRobotWebControlApp(object):
     elif action == 'setSpeed':
       self.form.message='Setting speed to '+speedSliderValue
       self.form.speed = int(speedSliderValue)
-      self.robot.setSpeed(speed)
+      self.robot.setSpeed(self.form.speed)
     elif action == 'stop':
       self.form.message='Stopping'  
       self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=True)
