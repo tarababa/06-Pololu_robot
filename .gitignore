@@ -239,3 +239,4 @@ motor Control/PololuSerialTransmitterV1.3/Pololu Serial Transmitter.application
 motor Control/PololuSerialTransmitterV1.3/setup.exe
 motor Control/application.py
 motor Control/PololuRobotWebControl.py
+src/motor control/test.py

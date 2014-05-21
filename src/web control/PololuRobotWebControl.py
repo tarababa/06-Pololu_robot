@@ -27,6 +27,8 @@ from webob import Request, Response, exc
 sys.path.append(os.path.join("..","configuration"))
 import Configuration
 
+#determine location of this file
+HERE = os.path.abspath(os.path.dirname(__file__))
 
 #------------------------------------------------------------------------------#
 # WebControlFormHelper: helper class, holds pages and dynamic items on pages   #
@@ -37,10 +39,12 @@ import Configuration
 #------------------------------------------------------------------------------# 
 class WebControlFormHelper():
   def __init__(self,**kwargs):
+    #set HTML dir 
+    html_dir = os.path.abspath( os.path.join(HERE, 'html'))    
     #open and read main page into memory (TODO make this more generic)
-    self.mainPage    = (open('./html/PololuQikWebControl.html','r').read())
+    self.mainPage    = (open(html_dir+'/PololuQikWebControl.html','r').read())
     #open and read the control form into memory
-    self.controlForm = (open('./html/PololuQikWebControlForm.html','r').read())
+    self.controlForm = (open(html_dir+'/PololuQikWebControlForm.html','r').read())
     self.backwardButtonColor = None
     self.forwardButtonColor  = None
     self.leftButtonColor     = None
@@ -49,7 +53,6 @@ class WebControlFormHelper():
     self.message             = None
     self.speed               = 0
     self.mjpgStreamServer = kwargs.get('mjpgStreamServer','http://10.0.0.101:8080/?action=stream')
-    
   #------------------------------------------------------------------------------#
   # setButtonColors: Set the button colors according to the button pressed by    #
   #                  the user, so that the activated action (e.g. forward, left) #
@@ -94,6 +97,7 @@ class PololuRobotWebControlApp(object):
   def __init__(self, **kwargs):
     self.form = WebControlFormHelper(**kwargs)
     self.logger = kwargs.get('logger',)
+    self.robot = kwargs.get('robot')
     self.router = PathRouter()
     self.router.add_routes([
       url('/', self.do_main_page, name='home'),
@@ -180,7 +184,7 @@ class PololuRobotWebControlApp(object):
   #------------------------------------------------------------------------------# 
   def do_process_form(self, req):
     
-    action           = req.params['action'] #params.get('action')[0]
+    action           = req.params['action'] 
     speedSliderValue = req.params['speed']
     self.logger.debug('action['+action+'] speedSliderValue['+speedSliderValue+']')
     if action == 'forward':
@@ -189,6 +193,7 @@ class PololuRobotWebControlApp(object):
       #############################################
       # TODO put code here to drive robot forwards#
       #############################################    
+      self.robot.driveForwards()
     elif action == 'backward':
       self.form.message='Going '+action
       self.form.setButtonColors(backward=True, forward=False, left=False, right=False, stop=False)

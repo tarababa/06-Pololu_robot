@@ -20,23 +20,74 @@ sys.path.append(os.path.join('..','configuration'))
 import PololuQik, Configuration, ObstructionSensor    
     
 class PololuRobot():
-  def __init__(self,**kwargs):
+  def __init__(self):
     self.timer=None
-    #get logger object which is passed
-    #as a parameter
-    self.logger=kwargs.get('logger',)
-    self.obstructionSensorFront=kwargs.get('obstructionSensorFront')
-    #there is one obstruction sensor a
-    #at the front of the robot
+    #load configuration
+    self.kwargs=loadConfig()
+    self.logger=setupLogging()
+    #there is one obstruction sensor at the front of the robot
     self.sensorFront=ObstructionSensor.ObstructionSensor(**kwargs)
-    #we have one motor controller for
-    #both motors
-    self.motorControl=PololuQik.PololuQik()
+    #we have one motor controller for both motors
+    self.motorControl=PololuQik.PololuQik(**kwargs)
+    #initialize initial speed
     self.setDriveSpeed=30
     #initially the robot is stopped
     self.stopped=True
     #evading action
     self.evading=False
+
+  #------------------------------------------------------------------------------#
+  # loadConfig: loads configuration from config.ini and return values as         #
+  #             keyword arguments                                                #
+  # returnvalues: kwargs                                                         #
+  #------------------------------------------------------------------------------#
+  # version who when       description                                           #
+  # 1.00    hta 20.05.2014 Initial version                                       #
+  #------------------------------------------------------------------------------#   
+  def loadConfig(self):
+    ########################
+    #GENERAL CONFIGURATION #
+    ########################
+    #load config
+    config=Configuration.general_configuration();
+    #get all parameters from config.ini file
+    obstructionSensorFront = Configuration.CONFIG['ObstructionSensors']['FRONT']  
+    webServerIp            = Configuration.CONFIG['PololuRobotWebControl']['WEB_SERVER_IP']
+    webServerPort          = Configuration.CONFIG['PololuRobotWebControl']['WEB_SERVER_PORT']  
+    mjpgStreamServer       = Configuration.CONFIG['PololuRobotWebControl']['MJPG_STREAM_SERVER'] 
+    serialPort             = Configuration.CONFIG['PololuQik']['SERIAL_PORT']    
+    baudRate               = Configuration.CONFIG['PololuQik']['BAUD_RATE']    
+    
+    kwargs=dict(obstructionSensorFront=obstructionSensorFront, 
+                webServerIp=webServerIp, 
+                webServerPort=webServerPort,
+                mjpgStreamServer=mjpgStreamServer,
+                serialPort=serialPort,
+                baudRate=baudRate)
+    return kwargs
+  #------------------------------------------------------------------------------#
+  # setupLogging: loads configuration from log.ini, setups a logger and adds it  #
+  #               to the dictionary of keyword arguments                         #
+  # returnvalues: logger                                                         #
+  #------------------------------------------------------------------------------#
+  # version who when       description                                           #
+  # 1.00    hta 20.05.2014 Initial version                                       #
+  #------------------------------------------------------------------------------#   
+  def setupLogging(self):
+    ###############
+    #SETUP LOGGING#
+    ###############
+    LOGGER = 'PololuRobot'
+    #load logging configuration
+    Configuration.logging_configuration();
+    #configure logger as per configuration
+    Configuration.init_log(LOGGER);
+    #create logger
+    logger =  logging.getLogger(LOGGER)
+    #add the logger to dictionary of keyword arguments
+    self.kwargs.update(logger=logger)
+    return logger
+
   #------------------------------------------------------------------------------#
   # driveBackwards: Make robot drive backwards                                   #
   #                                                                              #
@@ -192,7 +243,7 @@ class PololuRobot():
   #                 In particular if a turn was stopped by turning the other way #
   #                 driving forwards or backwards or stopping otherwise, any     #
   #                 started callback is no longer required and must therefore be #
-  #                 cancelled
+  #                 cancelled                                                    #
   # paramteres:                                                                  #
   #                                                                              #
   # returnvalues: None                                                           #
@@ -253,7 +304,6 @@ class PololuRobot():
           #action is complete we can go
           #back to driving around at will
           self.evading=False
-      
 
   #------------------------------------------------------------------------------#
   # driveAvoidCollision: Drive around and avoid collisions                       #
@@ -272,49 +322,81 @@ class PololuRobot():
       # action then we can start driving forwards
       if self.stopped and not self.sensorFront.obstructed and not self.evading:
         self.driveForwards()
-        self.logger.debug('stopped['+str(self.stopped)+']')
-      # we detected an obstacle, and we are not allready taking
+      # we detected an obstacle, and we are not already taking
       # evasive action than we should go and try to evade the
       # obstacle
       if self.sensorFront.obstructed and not self.evading:
         self.evade() # avoid collision
-def main():
-  ########################
-  #GENERAL CONFIGURATION #
-  ########################
-  #load config
-  config=Configuration.general_configuration();
-  obstructionSensorFront = Configuration.CONFIG['ObstructionSensors']['FRONT']
+        
+        
+  def __call__(self):
+    try:
+      return self.main() or 0
+    except Exception as e:
+      logging.error(str(e))
+      return 1    
+  #------------------------------------------------------------------------------#
+  # main: start the web control server and pass it the pololu robot object       #
+  #                                                                              #
+  # paramteres:                                                                  #
+  #                                                                              #
+  # returnvalues: None                                                           #
+  #------------------------------------------------------------------------------#
+  # version who when       description                                           #
+  # 1.00    hta 20.05.2014 Initial version                                       #
+  #------------------------------------------------------------------------------#        
+  def main(self):
+      
+    try:
+      kwargs=self.kwargs
+      #add robot object to kwargs
+      kwargs.update(robot=self)
+      app = PololuRobotWebControl.PololuRobotWebControlApp(**kwargs)
+      #start
+      httpd = make_server(str(self.kwargs.get('webServerIp')),int(self.kwargs.get('webServerPort')), app)
+      self.logger.debug('webServerIp['+str(self.kwargs.get(webServerIp))+'] webServerPort['+ str(self.kwargs.get(webServerPort)) +']')
+      httpd.serve_forever()
+    finally:
+      None
+    return 0     
+        
+#def main():
+# ########################
+# #GENERAL CONFIGURATION #
+# ########################
+# #load config
+# config=Configuration.general_configuration();
+# obstructionSensorFront = Configuration.CONFIG['ObstructionSensors']['FRONT']
+#
+# ###############
+# #SETUP LOGGING#
+# ###############
+# LOGGER = 'PololuRobot'
+# #load logging configuration
+# Configuration.logging_configuration();
+# #configure logger as per configuration
+# Configuration.init_log(LOGGER);
+# #create logger
+# logger =  logging.getLogger(LOGGER) 
+#
+# robot = PololuRobot(logger=logger,obstructionSensorFront=int(obstructionSensorFront))
+# robot.driveAvoidCollision()
+# #robot.driveBackwards()
+# #time.sleep(5)
+# #robot.turnRight(4)
+# #while not robot.stopped:
+# #  time.sleep(0.3)
+# #time.sleep(3)
+# 
+# #robot.turnLeft(4)
+# #while not robot.stopped:
+# #  time.sleep(0.3)
+# 
+# #robot.driveForwards()
+# #time.sleep(5)
+# #robot.stop()
+# return 0
 
-  ###############
-  #SETUP LOGGING#
-  ###############
-  LOGGER = 'PololuRobot'
-  #load logging configuration
-  Configuration.logging_configuration();
-  #configure logger as per configuration
-  Configuration.init_log(LOGGER);
-  #create logger
-  logger =  logging.getLogger(LOGGER) 
-
-  robot = PololuRobot(logger=logger,obstructionSensorFront=int(obstructionSensorFront))
-  robot.driveAvoidCollision()
-  #robot.driveBackwards()
-  #time.sleep(5)
-  #robot.turnRight(4)
-  #while not robot.stopped:
-  #  time.sleep(0.3)
-  #time.sleep(3)
-  
-  #robot.turnLeft(4)
-  #while not robot.stopped:
-  #  time.sleep(0.3)
-  
-  #robot.driveForwards()
-  #time.sleep(5)
-  #robot.stop()
-  return 0
-
-
+main=PololuRobot() 
 if __name__ == '__main__':
     sys.exit(main())

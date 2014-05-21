@@ -59,19 +59,14 @@ LOGGER = 'PololuQik'
 
 class PololuQik():
  
-  def __init__(self):
-    #load general configuration
-    Configuration.general_configuration();
-    #load logging configuration
-    Configuration.logging_configuration();
-    #configure logger as per configuration
-    Configuration.init_log(LOGGER);
-    #create logger
-    self.logger =  logging.getLogger(LOGGER)
-    #create serial  connection  
-    serialPort=Configuration.CONFIG['PololuQik']['SERIAL_PORT']
-    self.logger.debug('using serial port['+serialPort+']')    
-    self.ser = serial.Serial(serialPort, 38400)
+  def __init__(self,**kwargs):
+    #set logger
+    self.logger=kwargs.get('logger',)
+    #assigne serialport  
+    serialPort=kwargs.get('serialPort')
+    baudRate  =int(kwargs.get(baudRate,38400))
+    self.logger.debug('using serial port['+serialPort+'] baudRate['+str(baudRate)+']')    
+    self.ser = serial.Serial(serialPort, baudRate)
     # wait for connection to intialize
     time.sleep(1)
     # not interested in whatever is in the input buffer
