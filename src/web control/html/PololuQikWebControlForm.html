@@ -20,8 +20,8 @@
         <th colspan="3" style="border-right:hidden;border-top:hidden;border-left:hidden" ><h3>Raspberry PI Robot Control</h3></th>
       </tr>
       <tr>
-        <td colspan="2" rowspan="1" style="height:10px;border-right:hidden; text-align:right">  <input type="range" name="speed" min="0" max="127" value="%(speed)s"></td>
-        <td colspan="1" rowspan="1" style="height:10px; text-align:center"> <button style="width:100px" type="submit" name="action" value="setSpeed" onclick="reload();">Set</button></td>
+        <td colspan="2" rowspan="1" style="height:20px;border-right:hidden; text-align:right">  <input type="range" name="speed" min="0" max="127" value="%(speed)s"></td>
+        <td colspan="1" rowspan="1" style="height:20px; text-align:center"> <button style="width:100px;height:20px" type="submit" name="action" value="setSpeed" onclick="reload();">Set</button></td>
       </tr>
       <tr>
         <td colspan="1" rowspan="1" style="height:40px;border-right:hidden;border-bottom:hidden"></td>
@@ -37,6 +37,9 @@
         <td colspan="1" rowspan="1" style="height:40px;border-right:hidden"></td>
         <td colspan="1" rowspan="1" style="height:40px;border-right:hidden; text-align:center"><button style="width:100px; height:40px; color:%(backwardButtonColor)s"  type="submit" name="action" value="backward">Backwards</button></td>
         <td colspan="1" rowspan="1" style="height:40px;"></td>
+      </tr>
+      <tr>
+        <td colspan="3" rowspan="1" style="height:40px;border-right:hidden; text-align:center"><button style="width:300px; height:40px; color:%(toggleRovingButtonColor)s"  type="submit" name="action" value="roving">%(toggleRovingButtonText)s</button></td>
       </tr>
       <tr>
         <td colspan="3" rowspan="1"style="height:65px;text-align:center; background-color:beige;padding:0px"><h4>%(message)s<h4></td>

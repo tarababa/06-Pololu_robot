@@ -41,7 +41,9 @@ import Configuration
 
 #determine location of this file
 HERE = os.path.abspath(os.path.dirname(__file__))
-
+#text labels for roving on/off toggle button
+ROVING_ON = 'Roving ON'
+ROVING_OFF= 'Roving OFF'
 #------------------------------------------------------------------------------#
 # WebControlFormHelper: helper class, holds pages and dynamic items on pages   #
 #                                                                              #
@@ -57,13 +59,15 @@ class WebControlFormHelper():
     self.mainPage    = (open(html_dir+'/PololuQikWebControl.html','r').read())
     #open and read the control form into memory
     self.controlForm = (open(html_dir+'/PololuQikWebControlForm.html','r').read())
-    self.backwardButtonColor = None
-    self.forwardButtonColor  = None
-    self.leftButtonColor     = None
-    self.rightButtonColor    = None
-    self.stopButtonColor     = None
-    self.message             = None
-    self.speed               = 0
+    self.backwardButtonColor     = None
+    self.forwardButtonColor      = None
+    self.leftButtonColor         = None
+    self.rightButtonColor        = None
+    self.stopButtonColor         = None
+    self.toggleRovingButtonColor = None
+    self.toggleRovingButtonText  = None
+    self.message                 = None
+    self.speed                   = 0
     self.mjpgStreamServer = kwargs.get('mjpgStreamServer','http://10.0.0.101:8080/?action=stream')
   #------------------------------------------------------------------------------#
   # setButtonColors: Set the button colors according to the button pressed by    #
@@ -74,29 +78,34 @@ class WebControlFormHelper():
   #             left:     True when left was chosen, false otherswise            #
   #             right:    True when right was chosen, false otherswise           #
   #             stop:     True when stop was chosen, false otherswise            #
+  #             roving:   True when roving was chosen, false otherswise          #
   #------------------------------------------------------------------------------#
   # version who when       description                                           #
   # 1.00    hta 15.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------# 
-  def setButtonColors(self,backward=False, forward=False, left=False, right=False, stop=False):
+  def setButtonColors(self,backward=False, forward=False, left=False, right=False, stop=False, roving=False):
     activeColor='hotpink'
     normalColor='black'
-    self.backwardButtonColor = normalColor
-    self.forwardButtonColor  = normalColor
-    self.leftButtonColor     = normalColor
-    self.rightButtonColor    = normalColor
-    self.stopButtonColor     = normalColor
+    self.backwardButtonColor     = normalColor
+    self.forwardButtonColor      = normalColor
+    self.leftButtonColor         = normalColor
+    self.rightButtonColor        = normalColor
+    self.stopButtonColor         = normalColor
+    self.toggleRovingButtonColor = normalColor
+    self.toggleRovingButtonText  = ROVING_OFF
     if backward:
-      self.backwardButtonColor = activeColor
-    elif forward:
-      self.forwardButtonColor  = activeColor
-    elif left:
-      self.leftButtonColor     = activeColor
-    elif right:
-      self.rightButtonColor    = activeColor
-    elif stop:
-      self.stopButtonColor     = activeColor
-
+      self.backwardButtonColor     = activeColor
+    elif forward:                 
+      self.forwardButtonColor      = activeColor
+    elif left:                    
+      self.leftButtonColor         = activeColor
+    elif right:                   
+      self.rightButtonColor        = activeColor
+    elif stop:                    
+      self.stopButtonColor         = activeColor
+    elif roving:
+      self.toggleRovingButtonColor = activeColor
+      self.toggleRovingButtonText  = ROVING_ON
 
 #------------------------------------------------------------------------------#
 # PololuRobotWebControlApp: handle requests from web client                    #
@@ -162,8 +171,9 @@ class PololuRobotWebControlApp(object):
   #                  set the message to be shown to the user (if any)            #
   # parameters: message: Text message to be shown to user                        #
   #             speed  : Speed, value for the slider bar                         #
+  #             toggleRovingButtonText: Roving OFF, Roving ON                   #
   #             backwardButtonColor, forwardButtonColor, leftButtonColor,        #
-  #             rightButtonColor, stopButtonColor:                               #
+  #             rightButtonColor, stopButtonColor, toggleRovingButtonColor:     #
   #                      Color for the text on the control buttons. The purpose  #
   #                      is to highlight the currently active action suchs as    #
   #                      forward, left etc.                                      #
@@ -176,11 +186,13 @@ class PololuRobotWebControlApp(object):
     res.content_type = 'text/html'
     res.text         = self.form.controlForm % {'message':self.form.message, 
                                     'speed':  self.form.speed, 
-                                    'backwardButtonColor':self.form.backwardButtonColor, 
-                                    'forwardButtonColor': self.form.forwardButtonColor, 
-                                    'leftButtonColor':    self.form.leftButtonColor, 
-                                    'rightButtonColor':   self.form.rightButtonColor, 
-                                    'stopButtonColor':    self.form.stopButtonColor}   
+                                    'backwardButtonColor':     self.form.backwardButtonColor, 
+                                    'forwardButtonColor':      self.form.forwardButtonColor, 
+                                    'leftButtonColor':         self.form.leftButtonColor, 
+                                    'rightButtonColor':        self.form.rightButtonColor, 
+                                    'stopButtonColor':         self.form.stopButtonColor,
+                                    'toggleRovingButtonColor': self.form.toggleRovingButtonColor,
+                                    'toggleRovingButtonText':  self.form.toggleRovingButtonText}   
     return res
     
   #------------------------------------------------------------------------------#
@@ -204,19 +216,19 @@ class PololuRobotWebControlApp(object):
     self.logger.debug('action['+action+'] speedSliderValue['+speedSliderValue+']')
     if action == 'forward':
       self.form.message='Going '+action
-      self.form.setButtonColors(backward=False, forward=True, left=False, right=False, stop=False)
+      self.form.setButtonColors(backward=False, forward=True, left=False, right=False, stop=False, roving=False)
       self.robot.driveForwards()
     elif action == 'backward':
       self.form.message='Going '+action
-      self.form.setButtonColors(backward=True, forward=False, left=False, right=False, stop=False)
+      self.form.setButtonColors(backward=True, forward=False, left=False, right=False, stop=False, roving=False)
       self.robot.driveBackwards()
     elif action == 'left':
       self.form.message='Turning '+action    
-      self.form.setButtonColors(backward=False, forward=False, left=True, right=False, stop=False)
+      self.form.setButtonColors(backward=False, forward=False, left=True, right=False, stop=False, roving=False)
       self.robot.turnLeft()
     elif action == 'right':
       self.form.message='Turning '+action   
-      self.form.setButtonColors(backward=False, forward=False, left=False, right=True, stop=False)
+      self.form.setButtonColors(backward=False, forward=False, left=False, right=True, stop=False, roving=False)
       self.robot.turnRight()
     elif action == 'setSpeed':
       self.form.message='Setting speed to '+speedSliderValue
@@ -224,9 +236,16 @@ class PololuRobotWebControlApp(object):
       self.robot.setSpeed(self.form.speed)
     elif action == 'stop':
       self.form.message='Stopping'  
-      self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=True)
+      self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=True, roving=False)
       self.robot.stop()
-    
+    elif action == 'roving':
+      #Toggle roving, of roving on then turn it of and vice versa
+      if self.form.toggleRovingButtonText = ROVING_ON:
+        self.form.message='End roving'  
+        self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=True, roving=False)
+      else:
+        self.form.message='Start roving'  
+        self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=True, roving=True)      
     #return updated control form to web client  
     return self.do_display_form (req)
 

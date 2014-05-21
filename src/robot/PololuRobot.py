@@ -52,7 +52,9 @@ class PololuRobot():
     self.setDriveSpeed=30
     #initially the robot is stopped
     self.stopped=True
-    #evading action
+    #roving mode can be chosen from web application
+    self.roving=False
+    #evading action (whilst roving)
     self.evading=False
     #not driving forwards or backwards to now
     self.drivingForwards=False
@@ -357,6 +359,22 @@ class PololuRobot():
           self.evading=False
 
   #------------------------------------------------------------------------------#
+  # roving: Start roving in a thread                                             #
+  #                                                                              #
+  # paramteres:                                                                  #
+  #                                                                              #
+  # returnvalues: None                                                           #
+  #------------------------------------------------------------------------------#
+  # version who when       description                                           #
+  # 1.00    hta 20.05.2014 Initial version                                       #
+  #------------------------------------------------------------------------------#           
+  def runRoving(self):
+    if not self.roving:
+      tRoving = threading.Thread(target=self.roving)
+      tRoving.start()
+      tRoving.join()
+    
+  #------------------------------------------------------------------------------#
   # roving: Drive around and avoid collisions                                    #
   #                                                                              #
   # paramteres:                                                                  #
@@ -367,7 +385,7 @@ class PololuRobot():
   # 1.00    hta 20.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------#           
   def roving(self):
-    while True:
+    while self.roving:
       # if we are not stopped, the front sensor is not detecting an
       # obstruction and we are not in the processes of taking evasive
       # action then we can start driving forwards
