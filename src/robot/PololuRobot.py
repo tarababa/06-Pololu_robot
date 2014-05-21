@@ -37,7 +37,9 @@ class PololuRobot():
     self.stopped=True
     #evading action
     self.evading=False
-
+    #not driving forwards or backwards to now
+    self.drivingForwards=False
+    self.drivingBackwards=False
   #------------------------------------------------------------------------------#
   # loadConfig: loads configuration from config.ini and return values as         #
   #             keyword arguments                                                #
@@ -105,6 +107,7 @@ class PololuRobot():
     self.motorControl.setSpeed(-1*self.setDriveSpeed)
     #robot is not stopped
     self.stopped=False
+    self.drivingBackwards=True
     
   #------------------------------------------------------------------------------#
   # driveForwards: Make robot drive forwards                                     #
@@ -121,6 +124,26 @@ class PololuRobot():
     self.motorControl.setSpeed(self.setDriveSpeed)
     #robot is not stopped
     self.stopped=False
+    self.drivingForwards=True
+
+  #------------------------------------------------------------------------------#
+  # setSpeed: change speed of robot                                              #
+  #                                                                              #
+  # returnvalues: None                                                           #
+  #------------------------------------------------------------------------------#
+  # version who when       description                                           #
+  # 1.00    hta 20.05.2014 Initial version                                       #
+  #------------------------------------------------------------------------------#     
+  def setSpeed(self, speed):
+    self.logger.debug('setting speed')
+    #update the speed
+    self.setDriveSpeed=speed
+    #if driving forwards or backwards we change  
+    #the speed the motors are running at
+    if self.drivingForwards:
+      self.driveForwards()
+    elif self.drivingBackwards:
+      self.driveBackwards()
     
   #------------------------------------------------------------------------------#
   # stop: stop the robot                                                         #
@@ -132,6 +155,9 @@ class PololuRobot():
   #------------------------------------------------------------------------------#     
   def stop(self):
     self.logger.debug('stopping')
+    #not driving bakcwards or forwards
+    self.drivingForwards=False
+    self.drivingBackwards=False  
     #cancel any callback to stop, if it exists
     self.cancelCallback()    
     #set speed to zero, then coast
@@ -155,6 +181,9 @@ class PololuRobot():
   #------------------------------------------------------------------------------#      
   def turnRight(self,time=0):
     self.logger.debug('turning right')
+    #not driving bakcwards or forwards
+    self.drivingForwards=False
+    self.drivingBackwards=False    
     #cancel any callback to stop, if it exists
     self.cancelCallback()
     #M0 drives the right hand side track i.e. inner side of curve
@@ -190,6 +219,9 @@ class PololuRobot():
   #------------------------------------------------------------------------------# 
   def turnLeft(self,time=0):
     self.logger.debug('turning left')
+    #not driving bakcwards or forwards
+    self.drivingForwards=False
+    self.drivingBackwards=False      
     #cancel any callback to stop, if it exists
     self.cancelCallback()
     #M0 drives the right hand side track i.e. outer side of curve
@@ -308,7 +340,7 @@ class PololuRobot():
           self.evading=False
 
   #------------------------------------------------------------------------------#
-  # driveAvoidCollision: Drive around and avoid collisions                       #
+  # roving: Drive around and avoid collisions                                    #
   #                                                                              #
   # paramteres:                                                                  #
   #                                                                              #
@@ -317,7 +349,7 @@ class PololuRobot():
   # version who when       description                                           #
   # 1.00    hta 20.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------#           
-  def driveAvoidCollision(self):
+  def roving(self):
     while True:
       # if we are not stopped, the front sensor is not detecting an
       # obstruction and we are not in the processes of taking evasive

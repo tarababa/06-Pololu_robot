@@ -98,6 +98,9 @@ class PololuRobotWebControlApp(object):
     self.form = WebControlFormHelper(**kwargs)
     self.logger = kwargs.get('logger',)
     self.robot = kwargs.get('robot')
+    #initialize speed in form with robot speed
+    self.form.speed = self.robot.setDriveSpeed
+    #create routes to web pages
     self.router = PathRouter()
     self.router.add_routes([
       url('/', self.do_main_page, name='home'),
@@ -206,6 +209,7 @@ class PololuRobotWebControlApp(object):
     elif action == 'setSpeed':
       self.form.message='Setting speed to '+speedSliderValue
       self.form.speed = int(speedSliderValue)
+      self.robot.setSpeed(speed)
     elif action == 'stop':
       self.form.message='Stopping'  
       self.form.setButtonColors(backward=False, forward=False, left=False, right=False, stop=True)
@@ -214,38 +218,6 @@ class PololuRobotWebControlApp(object):
     #return updated control form to web client  
     return self.do_display_form (req)
 
-def main():
-  ########################
-  #GENERAL CONFIGURATION #
-  ########################
-  #load config
-  config=Configuration.general_configuration();
-  #set server parameters
-  webServerIp      = Configuration.CONFIG['PololuRobotWebControl']['WEB_SERVER_IP']
-  webServerPort    = Configuration.CONFIG['PololuRobotWebControl']['WEB_SERVER_PORT']  
-  mjpgStreamServer = Configuration.CONFIG['PololuRobotWebControl']['MJPG_STREAM_SERVER']  
 
-  ###############
-  #SETUP LOGGING#
-  ###############
-  LOGGER = 'pololuRobotWebControl'
-  #load logging configuration
-  Configuration.logging_configuration();
-  #configure logger as per configuration
-  Configuration.init_log(LOGGER);
-  #create logger
-  logger =  logging.getLogger(LOGGER) 
-
-  #go start application server
-  app = PololuRobotWebControlApp(logger=logger, mjpgStreamServer=mjpgStreamServer)
-  httpd = make_server(str(webServerIp),int(webServerPort), app)
-  logger.debug('webServerIp['+str(webServerIp)+'] webServerPort['+ str(webServerPort) +']')
-  httpd.serve_forever()
-
-  return 0
-
-
-if __name__ == '__main__':
-    sys.exit(main())
 
 
