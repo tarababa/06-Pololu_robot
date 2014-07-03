@@ -196,6 +196,10 @@ class PololuRobot():
   # paramteres: time: desired duration in seconds of the right turn.             #
   #                   when time <= 0 then the right turn will carry              #
   #                   on indefinetely                                            #
+  #             radius: tuple defining relative speed for inner and outer track  #
+  #                     for a right turn the right track is the inner track      #
+  #                     and should run slower than the left (outer) track in     #
+  #                     order to accomplish a right turn                         #
   #                                                                              #
   # returnvalues: None                                                           #
   #------------------------------------------------------------------------------#
@@ -234,6 +238,10 @@ class PololuRobot():
   # paramteres: time: desired duration in seconds of the left turn.              #
   #                   when time <= 0 then the left turn will carry               #
   #                   on indefinetely                                            #
+  #             radius: tuple defining relative speed for inner and outer track  #
+  #                     for a left turn the left track is the inner track        #
+  #                     and should run slower than the right (outer) track in    #
+  #                     order to accomplish a left turn                          #  
   # returnvalues: None                                                           #
   #------------------------------------------------------------------------------#
   # version who when       description                                           #
@@ -267,7 +275,9 @@ class PololuRobot():
   #------------------------------------------------------------------------------#
   # callbackStop: This function is called once the callback timer expires which  #
   #               indicates the motors should be stopped. This function is used  #
-  #               to terminate turns after a certain amount of time              #
+  #               to terminate turns after a certain amount of time and to       #
+  #               reverse away from an obstacle for a certain amount of time when#
+  #               in roving mode.                                                #
   # paramteres:                                                                  #
   #                                                                              #
   # returnvalues: None                                                           #
@@ -326,6 +336,7 @@ class PololuRobot():
   # 1.00    hta 20.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------#           
   def evade(self):
+    SHARP_TURN_RADIUS=(-0.6,0.6)
     self.isEvading=True
     action='reverse'
     while self.isEvading and self.isRoving:
@@ -335,23 +346,36 @@ class PololuRobot():
         #until the front sensor no longer sees
         #the obstacle
         self.driveBackwards()
-        action='clearObstacle'
-      elif action=='clearObstacle':
+        #we'll drive backwards for one second
+        self.callback(function=self.callbackStop, time=1)        
+        action='reversing'
+      elif action=='reversing':
         self.logger.debug('action['+action+']')
-        #we are driving backwards until
-        #the sensor no longer detects the
-        #obstruction, then we can turn
+        #waiting for reverse movement to stop
+        if self.stopped:
+          action='clearedObstacle'
+      elif action=='clearedObstacle':
+        self.logger.debug('action['+action+']')
+        #we are done driving backwards lets
+        #see if the sensor still detects 
+        #the obstruction
         if not self.sensorFront.obstructed:
+          #no obstruction detected
+          #lets turn
           action='turn'
+        else:
+          #oh oh still detecting obstruction
+          #lets reverse a bit more
+          action='reverse'
       elif action=='turn':
         self.logger.debug('action['+action+']')
         #lets make this exciting and decide
         #randomly whether to turn left or right
         direction=['left','right']
         if random.choice(direction)=='left':
-          self.turnLeft(3)
+          self.turnLeft(1,SHARP_TURN_RADIUS)
         else:
-          self.turnRight(3)
+          self.turnRight(1,SHARP_TURN_RADIUS)
         action='turning'
       elif action == 'turning':
         if self.stopped:
