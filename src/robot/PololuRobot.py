@@ -23,8 +23,6 @@ controller class and the ObstructionSensor class.
 It also is responsible for starting the PololuRobotWebControlApp using the 
 WSGI reference implation included in Python.
 
-This is typically launched by PicroscopyConsoleApp using
-the WSGI reference implementation included in Python.
 """
 
 import sys,os
@@ -209,8 +207,8 @@ class PololuRobot():
     #M1 drives the left hand side track i.e. outer side of curve
     #to turn right the left hand side track must turn
     #faster then the right hand side track
-    inner_rate=0.5
-    outer_rate=0.7
+    inner_rate=0.4
+    outer_rate=0.8
     min_speed = 15
     if int(self.setDriveSpeed * inner_rate) < min_speed:
       M0Speed=min_speed
@@ -247,8 +245,8 @@ class PololuRobot():
     #M1 drives the left hand side track i.e. inner side of curve
     #to turn left the right hand side track must turn
     #faster then the left hand side track
-    inner_rate=0.5
-    outer_rate=0.7
+    inner_rate=0.4
+    outer_rate=0.8
     min_speed = 15
     if int(self.setDriveSpeed * inner_rate) < min_speed:
       M1Speed=min_speed
