@@ -35,6 +35,12 @@ sys.path.append(os.path.join('..','motor control'))
 sys.path.append(os.path.join('..','web control'))
 sys.path.append(os.path.join('..','configuration'))
 import PololuQik, Configuration, ObstructionSensor, PololuRobotWebControl    
+
+#tuple defining "radius" of a curve by specifying the percentage of the
+#speed of the inner and the outer track (e.g. when turning left the left 
+#track is the inner track and should turn slower than the outer track
+#to accomplish a left turn)
+DFLT_RADIUS=(0.4,1.0)
     
 class PololuRobot():
   def __init__(self):
@@ -196,7 +202,7 @@ class PololuRobot():
   # version who when       description                                           #
   # 1.00    hta 20.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------#      
-  def turnRight(self,time=0):
+  def turnRight(self,time=0,radius=DFLT_RADIUS):
     self.logger.debug('turning right')
     #not driving bakcwards or forwards
     self.drivingForwards=False
@@ -207,8 +213,7 @@ class PololuRobot():
     #M1 drives the left hand side track i.e. outer side of curve
     #to turn right the left hand side track must turn
     #faster then the right hand side track
-    inner_rate=0.4
-    outer_rate=0.8
+    inner_rate,outer_rate = radius
     min_speed = 15
     if int(self.setDriveSpeed * inner_rate) < min_speed:
       M0Speed=min_speed
@@ -234,7 +239,7 @@ class PololuRobot():
   # version who when       description                                           #
   # 1.00    hta 20.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------# 
-  def turnLeft(self,time=0):
+  def turnLeft(self,time=0, radius=DFLT_RADIUS):
     self.logger.debug('turning left')
     #not driving bakcwards or forwards
     self.drivingForwards=False
@@ -245,8 +250,7 @@ class PololuRobot():
     #M1 drives the left hand side track i.e. inner side of curve
     #to turn left the right hand side track must turn
     #faster then the left hand side track
-    inner_rate=0.4
-    outer_rate=0.8
+    inner_rate,outer_rate=radius
     min_speed = 15
     if int(self.setDriveSpeed * inner_rate) < min_speed:
       M1Speed=min_speed
