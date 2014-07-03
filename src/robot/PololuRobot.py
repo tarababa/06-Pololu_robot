@@ -347,7 +347,7 @@ class PololuRobot():
         #until the front sensor no longer sees
         #the obstacle
         self.driveBackwards()
-        #we'll drive backwards for one second
+        #we'll drive backwards for a bit
         self.callback(function=self.callbackStop, time=2.0)        
         action='reversing'
       elif action=='reversing':
