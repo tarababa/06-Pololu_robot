@@ -336,7 +336,8 @@ class PololuRobot():
   # 1.00    hta 20.05.2014 Initial version                                       #
   #------------------------------------------------------------------------------#           
   def evade(self):
-    SHARP_TURN_RADIUS=(-0.6,0.6)
+
+    SHARP_TURN_RADIUS=(0.2,1.5)
     self.isEvading=True
     action='reverse'
     while self.isEvading and self.isRoving:
@@ -347,7 +348,7 @@ class PololuRobot():
         #the obstacle
         self.driveBackwards()
         #we'll drive backwards for one second
-        self.callback(function=self.callbackStop, time=1)        
+        self.callback(function=self.callbackStop, time=2.0)        
         action='reversing'
       elif action=='reversing':
         self.logger.debug('action['+action+']')
@@ -373,9 +374,9 @@ class PololuRobot():
         #randomly whether to turn left or right
         direction=['left','right']
         if random.choice(direction)=='left':
-          self.turnLeft(1,SHARP_TURN_RADIUS)
+          self.turnLeft(0.9,SHARP_TURN_RADIUS)
         else:
-          self.turnRight(1,SHARP_TURN_RADIUS)
+          self.turnRight(0.9,SHARP_TURN_RADIUS)
         action='turning'
       elif action == 'turning':
         if self.stopped:
