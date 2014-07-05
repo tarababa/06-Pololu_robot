@@ -348,7 +348,7 @@ class PololuRobot():
         #the obstacle
         self.driveBackwards()
         #we'll drive backwards for a bit
-        self.callback(function=self.callbackStop, time=2.0)        
+        self.callback(function=self.callbackStop, time=2.0*(70/self.setDriveSpeed))        
         action='reversing'
       elif action=='reversing':
         self.logger.debug('action['+action+']')
@@ -374,9 +374,9 @@ class PololuRobot():
         #randomly whether to turn left or right
         direction=['left','right']
         if random.choice(direction)=='left':
-          self.turnLeft(0.9,SHARP_TURN_RADIUS)
+          self.turnLeft(70/self.setDriveSpeed)*0.9,SHARP_TURN_RADIUS)
         else:
-          self.turnRight(0.9,SHARP_TURN_RADIUS)
+          self.turnRight((70/self.setDriveSpeed)*0.9,SHARP_TURN_RADIUS)
         action='turning'
       elif action == 'turning':
         if self.stopped:
