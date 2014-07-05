@@ -60,7 +60,7 @@ class PololuRobot():
     self.isRoving=False
     #evading action (whilst roving)
     self.isEvading=False
-    #not driving forwards or backwards to now
+    #not driving forwards or backwards now
     self.drivingForwards=False
     self.drivingBackwards=False
   #------------------------------------------------------------------------------#
