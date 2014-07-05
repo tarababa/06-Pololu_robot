@@ -219,11 +219,14 @@ class PololuRobot():
     #faster then the right hand side track
     inner_rate,outer_rate = radius
     min_speed = 15
+    max_speed = 127
     if int(self.setDriveSpeed * inner_rate) < min_speed:
       M0Speed=min_speed
     else:
       M0Speed=int(self.setDriveSpeed * inner_rate)
     M1Speed= int((M0Speed / inner_rate) * outer_rate)
+    if M1Speed > max_speed:
+     M1Speed = max_speed
     self.motorControl.setM0Speed(M0Speed)          
     self.motorControl.setM1Speed(M1Speed)
     self.stopped=False
@@ -260,11 +263,14 @@ class PololuRobot():
     #faster then the left hand side track
     inner_rate,outer_rate=radius
     min_speed = 15
+    max_speed = 127
     if int(self.setDriveSpeed * inner_rate) < min_speed:
       M1Speed=min_speed
     else:
       M1Speed=int(self.setDriveSpeed * inner_rate)
     M0Speed= int((M1Speed / inner_rate) * outer_rate)
+    if M0Speed > max_speed:
+      M0Speed = max_speed
     self.motorControl.setM0Speed(M0Speed)          
     self.motorControl.setM1Speed(M1Speed)
     self.stopped=False
@@ -370,13 +376,33 @@ class PololuRobot():
           action='reverse'
       elif action=='turn':
         self.logger.debug('action['+action+']')
+        #determine duration of curve, aim is 
+        #to turn aprox. 90 degrees
+        duration=0.9
+        if self.setDriveSpeed > 0 and self.setDriveSpeed <= 20:
+          duration=1.10
+        elif self.setDriveSpeed > 20 and self.setDriveSpeed <= 30:
+          duration=1.05
+        elif self.setDriveSpeed > 30 and self.setDriveSpeed <= 40:
+          duration=1.00
+        elif self.setDriveSpeed > 40 and self.setDriveSpeed <= 50:
+          duration=0.95
+        elif self.setDriveSpeed > 50 and self.setDriveSpeed <= 60:
+          duration=0.90
+        elif self.setDriveSpeed > 60 and self.setDriveSpeed <= 70:
+          duration=0.85
+        elif self.setDriveSpeed > 70 and self.setDriveSpeed <= 80:
+          duration=0.8
+        elif self.setDriveSpeed > 80 :
+          duration=0.7
+ 
         #lets make this exciting and decide
         #randomly whether to turn left or right
         direction=['left','right']
         if random.choice(direction)=='left':
-          self.turnLeft(70/self.setDriveSpeed)*0.9,SHARP_TURN_RADIUS)
+          self.turnLeft(time=duration,radius=SHARP_TURN_RADIUS)
         else:
-          self.turnRight((70/self.setDriveSpeed)*0.9,SHARP_TURN_RADIUS)
+          self.turnRight(time=duration,radius=SHARP_TURN_RADIUS)
         action='turning'
       elif action == 'turning':
         if self.stopped:
