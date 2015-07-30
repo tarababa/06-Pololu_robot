@@ -31,30 +31,35 @@ For the web interface to control the robot we need WebOb and wheezy.routing. For
 ##[U4VL](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)
 We need U4VL to stream the video from the Raspberry Pi camera. The installation instructions can be found on the [U4VL website](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) but are added here for completion's sake (however they may not be up-to-date).
 
-```curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -```
+```
+curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -
+```
 
 Add the following line to the file /etc/apt/sources.list :
 
-    deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ wheezy main
-    
-    then
-    ```
-    sudo apt-get update
-    sudo apt-get install uv4l uv4l-raspicam
-    sudo apt-get install uv4l-raspicam-extras
-    sudo apt-get install uv4l-mjpegstream
-    sudo apt-get install uv4l-server
-    ```
-    to stop and start:
-    ```
-    sudo service uv4l_raspicam stop|start|restart
-    ```
-    
-    ```uv4l --driver raspicam --auto-video_nr --width 640 --height 480```
-    
-    using the uv4l built in server to watch a video stream from the camera
-    
-    http://raspberrypi:8080/stream/video.mjpeg
+```deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ wheezy main```
+ 
+then
+
+```
+sudo apt-get update
+sudo apt-get install uv4l uv4l-raspicam
+sudo apt-get install uv4l-raspicam-extras
+sudo apt-get install uv4l-mjpegstream
+sudo apt-get install uv4l-server
+ ```
+to stop and start:
+```
+sudo service uv4l_raspicam stop|start|restart
+```
+define width and height for stream
+```
+uv4l --driver raspicam --auto-video_nr --width 640 --height 480
+```
+
+Use the uv4l built in server to watch a video stream from the camera
+
+http://raspberrypi:8080/stream/video.mjpeg
    
 ##mjpg streamer (deprecated)
 
