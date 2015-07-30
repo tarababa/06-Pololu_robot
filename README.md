@@ -1,13 +1,10 @@
 #Pololu Robot
 
 This application controls a robot based on [Pololu's Zumo Chassis kit](http://www.pololu.com/product/1418). 
-It has two [motors](http://www.pololu.com/product/2367) controlled by a [Pololu Qik 2s9v1 Dual Serial Motor Controller](http://www.pololu.com/product/1110)
 The application is written to be compatible with Python 3.2.3 and is intended to run on a Raspberry PI.
 A simple web application is provided to show a control panel and a video stream from the camera attached to the Raspberry PI.
+The following chapters describe the software and hardware setup in a bit more detail.
 
-#Starting the application
-------------------------
-Start the application in the robot folder using `sudo python3 PololuRobot.py`
 
 
 #Setup
@@ -139,6 +136,7 @@ This sensor is mounted at the front of the robot and used when running in *rovin
 * GND connects to pin 6 (GND)
 * VCC connects to pin 1 (3V3)
 * OUT connects to pin 7 (GPIO4)
+Should a different I/O pin be desired then the correct GPIO pin needs to be configured in $HOME/....
 
 ##[Camera Board 360 Gooseneck Mount](http://www.modmypi.com/raspberry-pi/camera/camera-board-360-gooseneck-mount)
 Camera mount which allows the position of the camera to be adjusted without too much fuss.
@@ -146,6 +144,8 @@ Camera mount which allows the position of the camera to be adjusted without too 
 ##[QYG-QP6000-BL QYG QP6000 Micro/30-Pin 6000MA 5V/2.1A Power Bank](http://www.comx-computers.co.za/imageDisplay.php?i=85898_0)
 To power the Raspberry Pi I used a 6000mAh powerbank. It was purchased in South Africa at www.kalahari.co.za, the latter has since merged with takelot.com, they still sell powerbanks albeit not this one. I'm sure a suitable alternative can be found.
 
+##[WiFi Dongle - Nano USB](http://www.modmypi.com/raspberry-pi/accessories/wifi-dongles/wifi-dongle-nano-usb)
+A wifi dongle to allow the robot to roam untethered
 
 
 
