@@ -85,8 +85,28 @@ LD_PRELOAD=/usr/lib/uv4l/uv4lext/armv6l/libuv4lext.so ./mjpg_streamer -i "input_
 Now you can connect to the server and watch the output from the camera
 
 http://raspberrypi:8080/stream.html 
- 
- 
- 
+
+##Serial Port
+As we are going to use the UART port for communication with the motor control it cannot be used as a serial console which is setup by default and must be disabled.
+remove any references to `ttyAMA0` from the /boot/cmdline.txt file, in the example below `console=ttyAMA0,115200` and `kgdboc=ttyAMA0,115200`
+must be removed.
+
+```dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 dwc_otg.speed=1 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait```
+
+which after editting looks like:
+
+```dwc_otg.lpm_enable=0 dwc_otg.speed=1 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait```
+
+You'll also have to edit the `/etc/inittab` file, search for lines specifying the serial port `ttyAMA0`. 
+Use “#” at the start of the line to comment them out.  
+
+For the changes to take effect the the Raspberry Pi must be restarted `sudo shutdown -r now`
+
+
+##Pololu Robot 
+Clone the Pololu Robot project
+```git clone https://github.com/tarababa/06-Pololu_robot.git```
+To start the applicaton navigate to ./06-Pololu_robot/src/ and run the application
+```sudo python3 PololuRobot.py```
 
 
