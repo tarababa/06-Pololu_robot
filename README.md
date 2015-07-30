@@ -110,3 +110,23 @@ To start the applicaton navigate to ./06-Pololu_robot/src/ and run the applicati
 ```sudo python3 PololuRobot.py```
 
 
+#Hardware
+The following chapters cover the various hardware components used and how they are connected. Pin numbers in the following chapters relate to the pin numbers on the Raspberry Pi's GPIO header as published on [www.modmypi.com] (http://www.modmypi.com/blog/raspberry-pi-gpio-cheat-sheet)
+![gpio-cheat_sheet](http://www.modmypi.com/image/data/rpi-products/gpio/raspberry-pi-gpio-cheat-sheet.jpg)
+
+##[Zumo Chassis Kit (No Motors)](https://www.pololu.com/product/1418)
+This kit comes with sprockets and tracks. The body provides space for 4 AA batteries which will power the motors and the motors themsemelves. Putting the chassis and the motors together is fairly straightforward following the instructions provided on [Pololu's website](https://www.pololu.com/docs/pdf/0J54/zumo_chassis.pdf). The only thing which was a bit hard, as it required quite a bit of force, was pushing the wheels onto the motor's axel.
+
+##[100:1 Micro Metal Gearmotor MP](https://www.pololu.com/product/2367)
+The two motors are installed when the zumo chassis kit is put together. The electrical connections are covered in the motor controller chapter.
+
+##[Sharp GP2Y0D805Z0F Digital Distance Sensor 5cm](https://www.pololu.com/product/1131)
+This distance sensor requires a [carrier](https://www.pololu.com/product/1133) which can also be ordered from Pololu.
+This sensor is mounted at the front of the robot and used when running in *roving mode*.
+#####Electrical
+* GND connects to pin 6 (GND)
+* VCC connects to pin 1 (3V3)
+* OUT connects to pin 7 (GPIO4)
+
+
+
