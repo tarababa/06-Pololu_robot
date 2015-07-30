@@ -29,12 +29,59 @@ For the web interface to control the robot we need WebOb and wheezy.routing. For
  * or ```sudo apt-get install python3-serial```
 
 ##[U4VL](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)
-We will be using U4VL to stream the video from the Raspberry Pi camera. The installation instructions can be found on the [U4VL website](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) but are added here for completion's sake (however they may not be up-to-date).
+We need U4VL to stream the video from the Raspberry Pi camera. The installation instructions can be found on the [U4VL website](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) but are added here for completion's sake (however they may not be up-to-date).
 
 ```curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -```
 
 Add the following line to the file /etc/apt/sources.list :
 
     deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ wheezy main
+    
+    then
+    ```
+    sudo apt-get update
+    sudo apt-get install uv4l uv4l-raspicam
+    sudo apt-get install uv4l-raspicam-extras
+    sudo apt-get install uv4l-mjpegstream
+    sudo apt-get install uv4l-server
+    ```
+    to stop and start:
+    ```
+    sudo service uv4l_raspicam stop|start|restart
+    ```
+    
+    ```uv4l --driver raspicam --auto-video_nr --width 640 --height 480```
+    
+    using the uv4l built in server to watch a video stream from the camera
+    
+    http://raspberrypi:8080/stream/video.mjpeg
+   
+##mjpg streamer (deprecated)
+
+``` 
+mkdir /home/pi/mjpg-streamer
+cd /home/pi/mjpg-streamer
+
+sudo apt-get install libjpeg8-dev
+sudo apt-get install imagemagick
+sudo apt-get install subversion
+
+svn co https://svn.code.sf.net/p/mjpg-streamer/code/mjpg-streamer/ . 
+
+make clean 
+make 
+
+
+uv4l --driver raspicam --auto-video_nr --width 640 --height 480 
+cd mjpg-streamer raspberrypi ~ $ export LD_LIBRARY_PATH="$(pwd)"
+LD_PRELOAD=/usr/lib/uv4l/uv4lext/armv6l/libuv4lext.so ./mjpg_streamer -i "input_uvc.so -d /dev/video0 -r 640x480 -f 30" -o "output_http.so -w ./www" 
+```
+
+Now you can connect to the server and watch the output from the camera
+
+http://raspberrypi:8080/stream.html 
+ 
+ 
+ 
 
 
