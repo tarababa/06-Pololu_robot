@@ -120,6 +120,18 @@ This kit comes with sprockets and tracks. The body provides space for 4 AA batte
 ##[100:1 Micro Metal Gearmotor MP](https://www.pololu.com/product/2367)
 The two motors are installed when the zumo chassis kit is put together. The electrical connections are covered in the motor controller chapter.
 
+##[Pololu Qik 2s9v1 Dual Serial Motor Controller](https://www.pololu.com/product/1110)
+This motorcontroller receives its commands from the Raspberry Pi through the serial interface and controls the two motors of our robot. The manual can be found on [Pololu's website](https://www.pololu.com/docs/pdf/0J25/qik_2s9v1.pdf). Due to space constraints and because there is no need for them the headers for jumpers are not soldered in (demo-mode, CRC and fixed baud-rate). Also due to space consideration the supplied right angled male header strip was used.
+#####Electrical
+* GND (logic supply ground) connects to pin 14 (GND)
+* VCC (logic voltage)  connects to pin pin 17 (3V3)
+* RX (qik serial receive) connects to pin 8 (TXD)
+* TX (qik serial send) connects to pin 10 (RXD)
+* M1 connects to the right-hand motor
+* M0 connects to the left-hand motor
+* GND (motor supply ground) connects to negative terminal of the batteries in the battery compartment of the Zumo chassis
+* VMOT (motor voltage) connects to the positive terminal of the batteries in the battery compartment of the Zumo chassis
+
 ##[Sharp GP2Y0D805Z0F Digital Distance Sensor 5cm](https://www.pololu.com/product/1131)
 This distance sensor requires a [carrier](https://www.pololu.com/product/1133) which can also be ordered from Pololu.
 This sensor is mounted at the front of the robot and used when running in *roving mode*.
@@ -127,6 +139,13 @@ This sensor is mounted at the front of the robot and used when running in *rovin
 * GND connects to pin 6 (GND)
 * VCC connects to pin 1 (3V3)
 * OUT connects to pin 7 (GPIO4)
+
+##[Camera Board 360 Gooseneck Mount](http://www.modmypi.com/raspberry-pi/camera/camera-board-360-gooseneck-mount)
+Camera mount which allows the position of the camera to be adjusted without too much fuss.
+
+##[QYG-QP6000-BL QYG QP6000 Micro/30-Pin 6000MA 5V/2.1A Power Bank](http://www.comx-computers.co.za/imageDisplay.php?i=85898_0)
+To power the Raspberry Pi I used a 6000mAh powerbank. It was purchased in South Africa at www.kalahari.co.za, the latter has since merged with takelot.com, they still sell powerbanks albeit not this one. I'm sure a suitable alternative can be found.
+
 
 
 
