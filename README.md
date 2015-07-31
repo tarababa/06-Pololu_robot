@@ -97,6 +97,12 @@ which after editting looks like:
 You'll also have to edit the `/etc/inittab` file, search for lines specifying the serial port `ttyAMA0`. 
 Use “#” at the start of the line to comment them out.  
 
+Instead of editting these files the same can be accomplished by using the Raspberry Pi's configuration tool:
+* ```sudo raspi-config```
+* Choose 8: Advanced Options
+* Choose A8: Serial
+* Would you like a login shell to be accessible over serial ? -> choose <No>
+
 For the changes to take effect the the Raspberry Pi must be restarted `sudo shutdown -r now`
 
 
