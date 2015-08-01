@@ -119,9 +119,26 @@ For the changes to take effect the the Raspberry Pi must be restarted `sudo shut
 
 ##Pololu Robot 
 Clone the Pololu Robot project
-```git clone https://github.com/tarababa/06-Pololu_robot.git```
-To start the applicaton navigate to ./06-Pololu_robot/src/ and run the application
-```sudo python3 PololuRobot.py```
+* ```cd $HOME```
+* ```git clone https://github.com/tarababa/06-Pololu_robot.git```
+
+Make sure the IP-Address for the webserver is configured correctly: edit *$HOME/06-Pololu_robot/src/etc/config.ini* and make sure the values for ```WEBER_SERVER_IP``` and ````MJPG_STREAM_SERVER``` are relevant for your environment. All other properties need not be changed.
+
+```
+[PololuQik]
+SERIAL_PORT=/dev/ttyAMA0
+BAUD_RATE=38400
+[PololuRobotWebControl]
+WEB_SERVER_IP=10.0.0.101
+WEB_SERVER_PORT=8051
+MJPG_STREAM_SERVER=http://10.0.0.101:8080/stream/video.mjpeg
+[ObstructionSensors]
+FRONT=4
+```
+
+To start the application
+* ```cd  $HOME/06-Pololu_robot/src/robot/```
+* ```sudo python3 PololuRobot.py```
 
 
 #Hardware
