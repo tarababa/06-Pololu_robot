@@ -32,7 +32,7 @@ We need U4VL to stream the video from the Raspberry Pi camera. The installation 
 curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -
 ```
 
-Add the following line to the file /etc/apt/sources.list :
+Add the following line to the file */etc/apt/sources.list* :
 
 ```deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ wheezy main```
  
@@ -45,7 +45,22 @@ sudo apt-get install uv4l-raspicam-extras
 sudo apt-get install uv4l-mjpegstream
 sudo apt-get install uv4l-server
  ```
-to stop and start:
+
+Edit the UV4L configureation file */etc/uv4l/uv4l-raspicam.conf* and uncomment the width and height properties so that that they look like below, all other properties are left as is.
+
+```
+#
+# raspicam options
+#
+
+encoding = mjpeg
+width = 640
+height = 480
+framerate = 30
+```
+ 
+ 
+then restart uv4l_raspicam using the restart option:
 ```
 sudo service uv4l_raspicam stop|start|restart
 ```
