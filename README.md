@@ -21,7 +21,7 @@ For the web interface to control the robot we need WebOb and wheezy.routing. For
   * ```sudo pip-3.2 install WebOb```
 3. wheezy.routing
   * ```sudo pip-3.2 install wheezy.routing```
-4. pyserial
+4. pyserial, no longer necessary to manually install as it available with the current Raspbian images
  * ```sudo pip-3.2 install pyserial```
  * or ```sudo apt-get install python3-serial```
 
