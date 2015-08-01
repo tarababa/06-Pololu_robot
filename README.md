@@ -64,12 +64,8 @@ then restart uv4l_raspicam using the restart option:
 ```
 sudo service uv4l_raspicam stop|start|restart
 ```
-define width and height for stream
-```
-uv4l --driver raspicam --auto-video_nr --width 640 --height 480
-```
 
-Use the uv4l built in server to watch a video stream from the camera
+Use the uv4l built in server to watch a video stream from the camera, where raspberrypi references the IP-address of your Raspberry Pi
 
 http://raspberrypi:8080/stream/video.mjpeg
    
