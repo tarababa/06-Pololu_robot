@@ -3,6 +3,9 @@
 This application controls a robot based on [Pololu's Zumo Chassis kit](http://www.pololu.com/product/1418). 
 The application is written to be compatible with Python 3.2.3 and is intended to run on a Raspberry PI.
 A simple web application is provided to show a control panel and a video stream from the camera attached to the Raspberry PI.
+
+![robot control](https://github.com/tarababa/06-Pololu_robot/blob/master/doc/img/robot_userinterface.png)
+
 The following chapters describe the software and hardware setup in a bit more detail.
 
 
