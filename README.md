@@ -21,7 +21,7 @@ For the web interface to control the robot we need WebOb and wheezy.routing. For
   * ```sudo pip-3.2 install WebOb```
 3. wheezy.routing
   * ```sudo pip-3.2 install wheezy.routing```
-4. pyserial, no longer necessary to manually install as it available with the current Raspbian images
+4. pyserial, no longer necessary to manually install as it is available with the current Raspbian images
  * ```sudo pip-3.2 install pyserial```
  * or ```sudo apt-get install python3-serial```
 
@@ -46,7 +46,7 @@ sudo apt-get install uv4l-mjpegstream
 sudo apt-get install uv4l-server
  ```
 
-Edit the UV4L configureation file */etc/uv4l/uv4l-raspicam.conf* and uncomment the width and height properties so that that they look like below, all other properties are left as is.
+Edit the UV4L configureation file */etc/uv4l/uv4l-raspicam.conf* and uncomment the width and height properties so that that they look like below, all other properties are left unchanged.
 
 ```
 #
@@ -68,31 +68,6 @@ sudo service uv4l_raspicam stop|start|restart
 Use the uv4l built in server to watch a video stream from the camera, where raspberrypi references the IP-address of your Raspberry Pi
 
 http://raspberrypi:8080/stream/video.mjpeg
-   
-##mjpg streamer (deprecated)
-
-``` 
-mkdir /home/pi/mjpg-streamer
-cd /home/pi/mjpg-streamer
-
-sudo apt-get install libjpeg8-dev
-sudo apt-get install imagemagick
-sudo apt-get install subversion
-
-svn co https://svn.code.sf.net/p/mjpg-streamer/code/mjpg-streamer/ . 
-
-make clean 
-make 
-
-
-uv4l --driver raspicam --auto-video_nr --width 640 --height 480 
-cd mjpg-streamer raspberrypi ~ $ export LD_LIBRARY_PATH="$(pwd)"
-LD_PRELOAD=/usr/lib/uv4l/uv4lext/armv6l/libuv4lext.so ./mjpg_streamer -i "input_uvc.so -d /dev/video0 -r 640x480 -f 30" -o "output_http.so -w ./www" 
-```
-
-Now you can connect to the server and watch the output from the camera
-
-http://raspberrypi:8080/stream.html 
 
 ##Serial Port
 As we are going to use the UART port for communication with the motor control it cannot be used as a serial console which is setup by default and must be disabled.
