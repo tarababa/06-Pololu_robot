@@ -3,7 +3,7 @@
 This application controls a robot based on [Pololu's Zumo Chassis kit](http://www.pololu.com/product/1418). 
 The application is written to be compatible with Python 3.2.3 and is intended to run on a Raspberry PI.
 
-![robot](https://github.com/tarababa/06-Pololu_robot/blob/master/doc/img/robot_front.png)
+<img src="https://github.com/tarababa/06-Pololu_robot/blob/master/doc/img/robot_front.JPG" alt="Robot front" width="320"> <img src="https://github.com/tarababa/06-Pololu_robot/blob/master/doc/img/robot_side.JPG" alt="Robot side" width="320">
 
 A simple web application is provided to show a control panel and a video stream from the camera attached to the Raspberry PI (colors look off as a the *Noir* version of the Pi Camera is being used).
 
@@ -126,6 +126,11 @@ To start the application
 The following chapters cover the various hardware components used and how they are connected. Pin numbers in the following chapters relate to the pin numbers on the Raspberry Pi's GPIO header as published on [www.modmypi.com] (http://www.modmypi.com/blog/raspberry-pi-gpio-cheat-sheet)
 ![gpio-cheat_sheet](http://www.modmypi.com/image/data/rpi-products/gpio/raspberry-pi-gpio-cheat-sheet.jpg)
 
+The image below shows in a bit more detail how the robot was put together
+
+<img src="https://github.com/tarababa/06-Pololu_robot/blob/master/doc/img/construction.JPG" alt="construction" width="480">
+
+
 ##[Zumo Chassis Kit (No Motors)](https://www.pololu.com/product/1418)
 This kit comes with sprockets and tracks. The body provides space for 4 AA batteries which will power the motors and the motors themsemelves. Putting the chassis and the motors together is fairly straightforward following the instructions provided on [Pololu's website](https://www.pololu.com/docs/pdf/0J54/zumo_chassis.pdf). The only thing which was a bit hard, as it required quite a bit of force, was pushing the wheels onto the motor's axel.
 
@@ -143,6 +148,10 @@ This motorcontroller receives its commands from the Raspberry Pi through the ser
 * M0 connects to the left-hand motor
 * GND (motor supply ground) connects to negative terminal of the batteries in the battery compartment of the Zumo chassis
 * VMOT (motor voltage) connects to the positive terminal of the batteries in the battery compartment of the Zumo chassis
+
+The image below shows how the motor controller was mounted below the protruding plexiglass plate
+
+<img src="https://github.com/tarababa/06-Pololu_robot/blob/master/doc/img/motor_controller.JPG" alt="motor controller" width="480">
 
 ##[Sharp GP2Y0D805Z0F Digital Distance Sensor 5cm](https://www.pololu.com/product/1131)
 This distance sensor requires a [carrier](https://www.pololu.com/product/1133) which can also be ordered from Pololu.
