@@ -93,7 +93,7 @@ Instead of editting these files the same can be accomplished by using the Raspbe
 * ```sudo raspi-config```
 * Choose 8: Advanced Options
 * Choose A8: Serial
-* Would you like a login shell to be accessible over serial ? -> choose <No>
+* Would you like a login shell to be accessible over serial ? -> choose ```<No>```
 
 For the changes to take effect the the Raspberry Pi must be restarted `sudo shutdown -r now`
 
